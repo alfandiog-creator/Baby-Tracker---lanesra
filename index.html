@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#FFF8F9">
 <meta name="color-scheme" content="light">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -123,7 +123,8 @@ table.rk{width:100%;border-collapse:collapse;font-size:13px}
 .rk tr[data-a]{cursor:pointer}
 .ok{color:var(--acc-ink);font-weight:800}
 .no{color:var(--muted)}
-.step{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-top:1px solid var(--line)}
+.step{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.step b{font-size:14px}
 .step:first-of-type{border-top:0}
 .slist{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
 .sitem{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:12px;background:var(--bg);font-weight:600}
@@ -174,8 +175,12 @@ label.f select{display:block;width:100%;min-width:0;max-width:100%;min-height:46
 .btn.outline{border-color:var(--acc-ink);color:var(--acc-ink);margin-bottom:4px}
 .sheet .hd{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 /* revisi */
-label.f input,label.f textarea,label.f select,.sadd input,.pre input{font-weight:500;font-size:16px}
-::placeholder{font-weight:400;color:#B9A9AD;opacity:1}
+input,select,textarea,button{font-family:inherit}
+label.f input,label.f textarea,label.f select,.sadd input,.pre input,.pre span{font-weight:500;font-size:14px}
+label.f input,label.f select,.sadd input{min-height:44px}
+input[type=date],input[type=time]{font-family:inherit;font-size:14px}
+input::-webkit-date-and-time-value{font-family:inherit}
+::placeholder{font-weight:400;font-size:14px;color:#B9A9AD;opacity:1}
 .secttl{font-size:13px;font-weight:800;color:var(--muted);margin:4px 2px 8px;text-transform:uppercase;letter-spacing:.05em}
 .ck{color:#2FA36B;font-style:normal;font-weight:800;margin-right:3px}
 .meta .ck{margin-right:4px}
@@ -213,6 +218,27 @@ label.f .pre input{border:0;margin:0;background:transparent;border-radius:0;min-
 .need.done .nbody b{text-decoration:line-through;color:var(--muted)}
 .shop{display:inline-flex;align-items:center;gap:4px;margin-top:7px;font-size:12px;font-weight:800;color:var(--acc-ink);background:var(--acc-soft);padding:5px 10px;border-radius:99px;text-decoration:none}
 .p-tinggi{background:#FDE3E1;color:#C2473A}.p-sedang{background:#FFF1DC;color:#B7791F}.p-rendah{background:var(--line);color:var(--muted)}
+/* tanggal & jam */
+.dtw{position:relative}
+.dtw input{padding-right:38px!important}
+.dtw input::-webkit-calendar-picker-indicator{opacity:0;cursor:pointer;position:absolute;right:0;top:0;width:44px;height:100%}
+.dtw .dic{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;pointer-events:none}
+.dtw .dph{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:14px;font-weight:400;color:#B9A9AD;pointer-events:none;display:none}
+.dtw.empty .dph{display:block}
+.dtw.empty input{color:transparent}
+.dtw.empty input:focus{color:var(--ink)}
+.dtw.empty input:focus~.dph{display:none}
+/* angka kecil */
+.u{font-size:11px;font-weight:700;color:var(--muted);margin-left:2px}
+.chart .col{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;min-width:0}
+.chart .col .bar{flex:none;min-height:3px}
+.chart .bv{height:16px;line-height:16px;text-align:center;font-size:10px;font-weight:700;color:var(--acc-ink);white-space:nowrap}
+.gz span.g-ok{border-color:#BFE5CF;background:#EEF9F2;color:#1F7A4D}
+.gz span.g-warn{border-color:#F3D9A8;background:#FFF6E6;color:#9A6417}
+.gz span.g-bad{border-color:#F2C1BC;background:#FDEDEB;color:#B23A2E}
+.growth details{margin-top:8px}
+.growth summary{font-size:12px;font-weight:700;color:var(--acc-ink);cursor:pointer;list-style:none}
+.growth summary::-webkit-details-marker{display:none}
 /* login */
 .login{min-height:calc(100vh - 32px);display:flex;flex-direction:column;justify-content:center;padding-bottom:40px}
 .login .brand{font-size:26px;text-align:center;margin-bottom:26px}
@@ -334,7 +360,7 @@ const newId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 function fmtDM(d,yr){return new Intl.DateTimeFormat('id-ID',yr?{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}:{day:'numeric',month:'short',timeZone:'UTC'}).format(dUTC(d));}
 function fmtDateMed(d){return new Intl.DateTimeFormat('id-ID',{weekday:'short',day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}).format(dUTC(d));}
 const daysDiff=(a,b)=>Math.round((dUTC(b)-dUTC(a))/86400000);
-const num=v=>{const n=parseFloat(String(v==null?'':v).replace(',','.'));return n>0&&n<1000?Math.round(n*10)/10:null;};
+const num=v=>{const n=parseFloat(String(v==null?'':v).replace(/\s/g,'').replace(',','.'));return n>0&&n<1000?Math.round(n*100)/100:null;};
 const fmtNum=n=>String(n).replace('.',',');
 const strip=o=>{const c={...o};delete c.id;return c;};
 const clip=(t,n)=>{t=String(t||'');return t.length>n?t.slice(0,n-1)+'…':t;};
@@ -357,7 +383,7 @@ function gStatus(ind,z){
 function growthChips(v){
   const c=S.child,m=ageMonths(c.birthDate,v.date);
   const one=(ind,lab,val,unit)=>{if(!val)return '';const st=gStatus(ind,zScore(ind,c.sex,m,val));
-    return `<span>${lab}: ${fmtNum(val)} ${unit}${st?` · <i class="st-${st[1]}">${st[0]}</i>`:''}</span>`;};
+    return `<span class="${st?'g-'+st[1]:''}" title="${st?esc(st[0]):''}">${lab}: ${fmtNum(val)} ${unit}</span>`;};
   const h=one('wfa','BB',v.bb,'kg')+one('lhfa','PB',v.pb,'cm')+one('hcfa','LK',v.lk,'cm');
   return h?`<div class="gz">${h}</div>`:'';
 }
@@ -524,9 +550,23 @@ async function loadRecap(){
 }
 
 /* ---------- sheet & toast ---------- */
+const DIC='<svg class="dic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>';
+const TIC='<svg class="dic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+function enhanceDates(root){
+  root.querySelectorAll('input[type=date],input[type=time]').forEach(inp=>{
+    if(inp.parentElement.classList.contains('dtw'))return;
+    const w=document.createElement('div');w.className='dtw';
+    inp.parentNode.insertBefore(w,inp);w.appendChild(inp);
+    const isD=inp.type==='date';
+    w.insertAdjacentHTML('beforeend',(isD?DIC:TIC)+`<span class="dph">${isD?'Pilih tanggal':'Pilih jam'}</span>`);
+    const sync=()=>w.classList.toggle('empty',!inp.value);
+    inp.addEventListener('input',sync);inp.addEventListener('change',sync);sync();
+  });
+}
 function openSheet(html,opt){
   opt=opt||{};
   $('#sheet').innerHTML=html;
+  enhanceDates($('#sheet'));
   S.sheetHandler=opt.onClick||null;S.sheetChange=opt.onChange||null;
   $('#sb').hidden=false;$('#sb').scrollTop=0;$('#sheet').scrollTop=0;
   try{$('#sheet').scrollIntoView({block:'nearest'});}catch(e){}
@@ -557,8 +597,8 @@ function openAccount(){
 function openTummyAdd(slot){
   if(!guardWrite())return;
   openSheet(`<h3>Tummy time - Sesi ${slot}</h3><p class="sub">${CAL}${esc(fmtDateLong(S.date))} · jam dicatat otomatis</p>
-    <label class="f">Durasi (menit)<input id="f-min" type="number" inputmode="decimal" min="0.5" step="0.5" placeholder="Mis. 5"></label>
-    <div class="quick">${[2,3,5,10,15].map(m=>`<button data-s="q" data-v="${m}">${m} menit</button>`).join('')}</div>
+    <label class="f">Durasi (menit)<input id="f-min" type="text" inputmode="decimal" placeholder="Mis. 5"></label>
+    <div class="quick">${[2,3,5,10,15].map(m=>`<button data-s="q" data-v="${m}">${m} mins</button>`).join('')}</div>
     <label class="f">Catatan (opsional)<textarea id="f-note" rows="2" placeholder="${esc(PH.tummy)}"></textarea></label>
     <div class="btns"><button class="btn" data-s="close">Batal</button><button class="btn primary" data-s="save">Simpan</button></div>`,
     {onClick:async(b,sh)=>{
@@ -587,7 +627,7 @@ function openDetail(id){
   const title=l.type==='olahraga'?'Olahraga - Sesi '+l.session:l.type==='mandi'?'Mandi - '+mandiName(l.session):'Tummy time - Sesi '+l.session;
   const hist=(l.history||[]).slice().reverse();
   openSheet(`<h3>${esc(title)}</h3><p class="sub">${CAL}${esc(fmtDateLong(l.date))}</p>
-    ${isT?`<label class="f">Durasi (menit)<input id="f-min" type="number" inputmode="decimal" min="0.5" step="0.5" value="${esc(l.minutes)}" ${ro?'disabled':''}></label>`:''}
+    ${isT?`<label class="f">Durasi (menit)<input id="f-min" type="text" inputmode="decimal" value="${l.minutes!=null?fmtMin(l.minutes):''}" ${ro?'disabled':''}></label>`:''}
     <label class="f">Catatan<textarea id="f-note" rows="2" placeholder="${esc(isT?PH.tummy:PH[l.type]||PH.olahraga)}" ${ro?'disabled':''}>${esc(l.note||'')}</textarea></label>
     <label class="f">${isT?'Jam mulai':'Jam selesai'} (ubah kalau perlu)<input id="f-time" type="time" value="${esc(l.time||'')}" ${ro?'disabled':''}></label>
     <div class="info">Dicatat oleh <b>${esc(roleName(l.createdRole))}</b> · ${fmtStamp(l.createdAt)}${l.updatedRole?`<br>Terakhir diubah oleh <b>${esc(roleName(l.updatedRole))}</b> · ${fmtStamp(l.updatedAt)}`:''}</div>
@@ -704,9 +744,9 @@ function openVisitForm(v){
       <div class="chips sm" data-g="ptype">${['RS','Klinik'].map(x=>`<button data-s="ptype" data-v="${x}" class="${pt===x?'on':''}">${x}</button>`).join('')}</div></label>
     <datalist id="dl-place">${places.map(d=>`<option value="${esc(d)}">`).join('')}</datalist>
     <div class="f-lbl">Hasil pemeriksaan (isi setelah kunjungan)</div>
-    <div class="three"><label class="f">BB (kg)<input id="v-bb" type="number" inputmode="decimal" step="0.01" min="0" placeholder="Mis. 4,2" value="${e.bb||''}"></label>
-      <label class="f">PB (cm)<input id="v-pb" type="number" inputmode="decimal" step="0.1" min="0" placeholder="Mis. 55" value="${e.pb||''}"></label>
-      <label class="f">LK (cm)<input id="v-lk" type="number" inputmode="decimal" step="0.1" min="0" placeholder="Mis. 37" value="${e.lk||''}"></label></div>
+    <div class="three"><label class="f">BB (kg)<input id="v-bb" type="text" inputmode="decimal" placeholder="Mis. 4,2" value="${e.bb?fmtNum(e.bb):''}"></label>
+      <label class="f">PB (cm)<input id="v-pb" type="text" inputmode="decimal" placeholder="Mis. 55" value="${e.pb?fmtNum(e.pb):''}"></label>
+      <label class="f">LK (cm)<input id="v-lk" type="text" inputmode="decimal" placeholder="Mis. 37" value="${e.lk?fmtNum(e.lk):''}"></label></div>
     <label class="f">Catatan dokter<textarea id="v-note" rows="3" maxlength="600" placeholder="Mis. Pertanyaan, Saran, Obat yang diresepkan, dll.">${val('note')}</textarea></label>
     ${stampInfo(v)}
     <div class="btns">${v&&isAdmin()?'<button class="btn danger" data-s="del">Hapus</button>':''}<button class="btn" data-s="close">Batal</button><button class="btn primary" data-s="save">Simpan</button></div>`,
@@ -741,9 +781,9 @@ function openChildForm(){
   openSheet(`<h3>Data lahir ${esc(CHILD.split(' ')[0])}</h3><p class="sub">Dipakai sebagai patokan status gizi (standar WHO)</p>
     <div class="two"><label class="f">Tanggal lahir<input id="c-birth" type="date" value="${esc(c.birthDate||'')}"></label>
       <div><div class="f-lbl">Jenis kelamin</div><div class="chips" data-g="sex" style="margin-top:5px">${[['P','Perempuan'],['L','Laki-laki']].map(([k,l])=>`<button data-s="sex" data-v="${k}" class="${c.sex===k?'on':''}">${l}</button>`).join('')}</div></div></div>
-    <div class="three"><label class="f">BB lahir (kg)<input id="c-bb" type="number" inputmode="decimal" step="0.01" value="${c.bb||''}" placeholder="Mis. 3,34"></label>
-      <label class="f">PB lahir (cm)<input id="c-pb" type="number" inputmode="decimal" step="0.1" value="${c.pb||''}" placeholder="Mis. 50"></label>
-      <label class="f">LK lahir (cm)<input id="c-lk" type="number" inputmode="decimal" step="0.1" value="${c.lk||''}" placeholder="Mis. 34"></label></div>
+    <div class="three"><label class="f">BB lahir (kg)<input id="c-bb" type="text" inputmode="decimal" value="${c.bb?fmtNum(c.bb):''}" placeholder="Mis. 3,34"></label>
+      <label class="f">PB lahir (cm)<input id="c-pb" type="text" inputmode="decimal" value="${c.pb?fmtNum(c.pb):''}" placeholder="Mis. 50"></label>
+      <label class="f">LK lahir (cm)<input id="c-lk" type="text" inputmode="decimal" value="${c.lk?fmtNum(c.lk):''}" placeholder="Mis. 34"></label></div>
     <div class="btns"><button class="btn" data-s="close">Batal</button><button class="btn primary" data-s="save">Simpan</button></div>`,
     {onClick:async(b,sh)=>{
       if(b.dataset.s==='sex'){pickChip(b);return;}
@@ -890,9 +930,10 @@ function growthCard(){
   const ageTxt=am==null?'':am<1?Math.max(0,daysDiff(c.birthDate,ymd()))+' hari':Math.floor(am)+' bulan';
   const gain=last&&last.bb&&c.bb?` · BB naik ${fmtNum(Math.round((last.bb-c.bb)*100)/100)} kg sejak lahir`:'';
   return `<div class="growth"><div class="card-h" style="margin:0"><h2>Status gizi (standar WHO)</h2><button class="addbtn" data-a="childform">Data lahir</button></div>
-    <p class="hint" style="margin-top:4px">Usia ${esc(first)}: ${ageTxt} · ${last?'pengukuran terakhir '+esc(fmtDM(last.date,true)):'pakai data lahir'}${gain}</p>
     <div class="grow3">${cell('wfa','bb','BB','kg')}${cell('lhfa','pb','PB','cm')}${cell('hcfa','lk','LK','cm')}</div>
-    <p class="hint">Acuan standar WHO, bukan diagnosis. Diskusikan hasilnya dengan dokter anak.</p></div>`;
+    <details><summary>Lihat detail ▾</summary>
+    <p class="hint">Usia ${esc(first)}: ${ageTxt} · ${last?'pengukuran terakhir '+esc(fmtDM(last.date,true)):'pakai data lahir'}${gain}</p>
+    <p class="hint">Acuan standar WHO, bukan diagnosis. Diskusikan hasilnya dengan dokter anak.</p></details></div>`;
 }
 function viewVisits(){
   const today=ymd(),key=v=>String(v.date)+' '+(v.time||'99:99');
@@ -1013,7 +1054,7 @@ function viewToday(){
   h+=`<div class="secttl">Rangkuman hari ini</div><div class="sumA">
     <div class="${sF?'full':''}"><b>${sDone}/${supp.length}</b><span>${sF?CK:''}Suplemen</span></div>
     <div class="${oF?'full':''}"><b>${oDone}/${c.olahragaSessions}</b><span>${oF?CK:''}Olahraga</span></div>
-    <div><b>${fmtMin(tMin)}</b><span>Menit Tummy</span></div>
+    <div><b>${fmtMin(tMin)}<span class="u">mins</span></b><span>Tummy time</span></div>
     <div class="${mF?'full':''}"><b>${mDone}/${MANDI.length}</b><span>${mF?CK:''}Mandi</span></div></div>`;
   if(S.loading)h+='<div class="loading">Memuat catatan…</div>';
   h+=`<section class="card"><div class="card-h"><h2>Suplemen</h2><button class="addbtn" data-a="suppman">Ubah</button></div>
@@ -1023,16 +1064,16 @@ function viewToday(){
     <p class="hint">Tap 1x jika sudah dilakukan, tap lagi untuk membatalkan.</p></section>`;
   h+=`<section class="card"><div class="card-h"><h2>Olahraga</h2><span class="meta">${oDone>=c.olahragaSessions?CK:''}${oDone} dari ${c.olahragaSessions} sesi</span></div>
     <div class="dots">${ol.map(o=>`<button class="dot${o.log?' done':''}" data-a="ol" data-i="${o.i}" aria-label="Olahraga - Sesi ${o.i}">${o.i}${o.log?`<small>${dot(o.log.time)}</small><small class="who">${esc(roleName(o.log.createdRole))}</small>${o.log.note?'<span class="nb">📝</span>':''}`:''}</button>`).join('')}</div>
-    <p class="hint">Tap 1x jika sudah dilakukan, tap lagi untuk menambahkan/mengubah catatan.</p></section>`;
-  h+=`<section class="card"><div class="card-h"><h2>Tummy time</h2><span class="meta">${CLK}Total ${fmtMin(tMin)} menit</span></div>
+    <p class="hint">Tap 1x jika sudah dilakukan, tap lagi untuk menambahkan / mengubah catatan.</p></section>`;
+  h+=`<section class="card"><div class="card-h"><h2>Tummy time</h2><span class="meta">${CLK}Total ${fmtMin(tMin)} mins</span></div>
     <div class="trows">${tt.map(r=>{
       const live=S.timer&&S.timer.slot===r.i&&S.timer.date===S.date;
       const sum=r.parts.reduce((a,l)=>a+(+l.minutes||0),0);
       return `<div class="trow${r.parts.length?' has':''}"><div class="tnum">${r.i}</div>
-        <div class="tparts">${r.parts.map(p=>`<button class="chip" data-a="detail" data-id="${esc(p.id)}">${fmtMin(p.minutes)} menit${nd(p)}<small>${dot(p.time)} · ${esc(roleName(p.createdRole))}</small></button>`).join('')}
+        <div class="tparts">${r.parts.map(p=>`<button class="chip" data-a="detail" data-id="${esc(p.id)}">${fmtMin(p.minutes)} mins${nd(p)}<small>${dot(p.time)} · ${esc(roleName(p.createdRole))}</small></button>`).join('')}
           ${live?'<span class="chip live">● <span class="tclock">'+clock(Date.now()-S.timer.start)+'</span></span>':''}
           ${!r.parts.length&&!live?'<span class="empty">Belum</span>':''}
-          ${r.parts.length>1?`<span class="tsum">= ${fmtMin(sum)} menit</span>`:''}</div>
+          ${r.parts.length>1?`<span class="tsum">= ${fmtMin(sum)} mins</span>`:''}</div>
         <div class="tact">${live?'<button class="ibtn" data-a="tstop" aria-label="Selesai" style="background:var(--warm);color:#fff;border-color:var(--warm)">■</button>'
           :`<button class="ibtn" data-a="tstart" data-i="${r.i}" aria-label="Mulai timer sesi ${r.i}" ${S.timer?'disabled':''}>▶</button>`}
           <button class="ibtn" data-a="tadd" data-i="${r.i}" aria-label="Isi menit manual sesi ${r.i}">+</button></div></div>`;
@@ -1042,7 +1083,7 @@ function viewToday(){
   h+=`<section class="card"><div class="card-h"><h2>Mandi</h2><span class="meta">${mF?CK:''}${md.filter(m=>m.log).length} dari ${md.length} sesi</span></div>
     <div class="supp-grid">${md.map(m=>`<button class="supp${m.log?' done':''}" data-a="mandi" data-i="${m.i}">
       <span class="ic">${m.log?'✓':''}</span><span><b>${m.n}</b>${nd(m.log)}<small>${m.log?dot(m.log.time)+' · '+esc(roleName(m.log.createdRole)):'Belum'}</small></span></button>`).join('')}</div>
-    <p class="hint">Tap 1x jika sudah dilakukan, tap lagi untuk menambahkan/mengubah catatan.</p></section>`;
+    <p class="hint">Tap 1x jika sudah dilakukan, tap lagi untuk menambahkan / mengubah catatan.</p></section>`;
   if(isAdmin()&&delCount)h+=`<button class="linkbtn" data-a="deleted">Catatan terhapus (${delCount})</button>`;
   return h;
 }
@@ -1067,7 +1108,7 @@ function viewRecap(){
   h+=`<div class="secttl">Rangkuman</div><div class="sumA">
     <div class="${f(spFull)?'full':''}"><b>${spFull}/${n}</b><span>${f(spFull)?CK:''}Suplemen</span></div>
     <div class="${f(olFull)?'full':''}"><b>${olFull}/${n}</b><span>${f(olFull)?CK:''}Olahraga</span></div>
-    <div><b>${fmtMin(avg)}</b><span>Avg. Menit Tummy</span></div>
+    <div><b>${fmtMin(avg)}<span class="u">mins</span></b><span>Avg. tummy</span></div>
     <div class="${f(mdFull)?'full':''}"><b>${mdFull}/${n}</b><span>${f(mdFull)?CK:''}Mandi</span></div></div>
     <p class="hint" style="margin:-4px 0 12px;text-align:center">Jumlah hari lengkap dari ${n} hari terakhir</p>`;
   h+=`<section class="card"><div class="card-h"><h2>Detail per hari</h2><span class="meta">tap untuk buka</span></div>
@@ -1075,7 +1116,7 @@ function viewRecap(){
     ${rows.map(r=>`<tr data-a="jump" data-d="${r.d}"><td>${esc(fmtShort(r.d))}</td>
       <td>${r.s.missing?'<span class="no">?</span>':r.s.supp.map(x=>x?'<span class="ok">✓</span>':'<span class="no">·</span>').join(' ')}</td>
       <td class="${r.s.ol>=c.olahragaSessions?'ok':''}">${r.s.ol}/${c.olahragaSessions}</td>
-      <td>${fmtMin(r.s.tm)} menit</td>
+      <td>${fmtMin(r.s.tm)} mins</td>
       <td class="${r.s.md.every(Boolean)?'ok':''}">${r.s.md.filter(Boolean).length}/${MANDI.length}</td></tr>`).join('')}
     </tbody></table></section>`;
   if(c.supplements.length)h+=`<section class="card"><div class="card-h"><h2>Suplemen</h2><span class="meta">${n} hari terakhir</span></div>
@@ -1085,10 +1126,10 @@ function viewRecap(){
   const chron=rows.slice().reverse();
   const mx=Math.max(...chron.map(r=>r.s.tm),1);
   const lbl=(d,i)=>n===7?fmtShort(d).split(',')[0]:(n===14||i%5===0||i===chron.length-1)?String(+d.slice(8)):'';
-  h+=`<section class="card"><div class="card-h"><h2>Tummy time per hari</h2><span class="meta">${CLK}Rata-rata ${fmtMin(avg)} menit/hari</span></div>
-    <div class="chart">${chron.map(r=>`<div class="bar${r.s.tm?'':' zero'}" style="height:${Math.max(2,r.s.tm/mx*100)}%" title="${esc(fmtShort(r.d))}: ${fmtMin(r.s.tm)} menit"></div>`).join('')}</div>
+  h+=`<section class="card"><div class="card-h"><h2>Tummy time per hari</h2><span class="meta">${CLK}mins per hari</span></div>
+    <div class="chart">${chron.map(r=>`<div class="col"><span class="bv">${r.s.tm?fmtMin(r.s.tm):''}</span><div class="bar${r.s.tm?'':' zero'}" style="height:calc((100% - 16px) * ${Math.max(0.02,r.s.tm/mx).toFixed(3)})" title="${esc(fmtShort(r.d))}: ${fmtMin(r.s.tm)} mins"></div></div>`).join('')}</div>
     <div class="xl">${chron.map((r,i)=>`<span>${esc(lbl(r.d,i))}</span>`).join('')}</div>
-    <p class="hint">Tinggi batang = total menit tummy time pada hari itu.</p></section>`;
+    <p class="hint">Angka di atas batang = total tummy time hari itu.</p></section>`;
   return h;
 }
 function tabs(){
