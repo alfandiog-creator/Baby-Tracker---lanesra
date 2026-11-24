@@ -252,6 +252,8 @@ label.f textarea.link{font-size:13px;word-break:break-all}
 .perday{margin-bottom:12px}
 .item .t small{line-height:1.65}
 .next .m{line-height:1.7}
+.rcv{display:inline-block;font-size:11px;font-weight:800;color:#1F7A4D;background:#EEF9F2;border:1px solid #BFE5CF;border-radius:99px;padding:1px 8px;margin-left:4px;vertical-align:1px}
+.notebtn.tf{color:#1F7A4D;background:#EEF9F2;margin-right:6px}
 /* login */
 .login{min-height:calc(100vh - 32px);display:flex;flex-direction:column;justify-content:center;padding-bottom:40px}
 .login .brand{font-size:26px;text-align:center;margin-bottom:26px}
@@ -424,6 +426,8 @@ function ageText(b,d){
 }
 const rpNum=v=>{const n=parseInt(String(v||'').replace(/\D/g,''),10);return n>0?n:null;};
 const rp=n=>n?Number(n).toLocaleString('id-ID'):'';
+function whoLine(v){return [v.doctor?'👤 '+esc(docName(v)):'',v.place?'🏥 '+esc(placeName(v)):''].filter(Boolean).join(' · ');}
+function reimbLine(v){return '💰 Reimbursement Rp '+esc(rp(v.costReimb))+(v.reimbReceived?' <span class="rcv">✓ Diterima</span>':'');}
 function mandiName(i){const m=MANDI.find(x=>x[0]===i);return m?m[1]:'Sesi '+i;}
 function lsGet(){try{return localStorage.getItem(STORE_KEY);}catch(e){return null;}}
 function lsSet(v){try{if(v)localStorage.setItem(STORE_KEY,v);else localStorage.removeItem(STORE_KEY);}catch(e){}}
@@ -831,11 +835,17 @@ function openVisitForm(v){
     }});
 }
 function openVisitNote(v){
-  const who=[v.doctor?'👤 '+esc(docName(v)):'',v.place?'🏥 '+esc(placeName(v)):''].filter(Boolean).join('<br>');
+  const who=whoLine(v);
   openSheet(`<h3>Catatan dokter</h3><p class="sub">${CAL}${esc(fmtDateLong(v.date))} · ${esc(vt(v.type)[1])}${who?'<br>'+who:''}</p>
     <div class="notebox">${esc(v.note||'')}</div>
     <div class="btns"><button class="btn" data-s="close">Tutup</button>${S.canWrite?'<button class="btn primary" data-s="edit">Ubah</button>':''}</div>`,
     {onClick:b=>{if(b.dataset.s==='edit')openVisitForm(v);}});
+}
+async function markReimb(v){
+  if(!guardWrite())return;
+  const prev=strip(v);
+  if(await saveDoc('visits',v.id,{...prev,reimbReceived:true,reimbReceivedAt:Date.now(),reimbRole:S.role,updatedAt:Date.now(),updatedRole:S.role}))
+    toast('Reimbursement ditandai diterima',{label:'Urungkan',fn:()=>saveDoc('visits',v.id,prev)});
 }
 function openChildForm(){
   if(!guardWrite())return;
@@ -981,13 +991,14 @@ function visitItem(v){
   const t=vt(v.type),meds=S.meds.filter(m=>m.visitId===v.id).map(m=>m.name);
   const title=t[1]+(v.type==='imunisasi'&&v.vaxAge!==''&&v.vaxAge!=null&&vaxLabel(v.vaxAge)?' · '+vaxLabel(v.vaxAge):'');
   const lines=[CAL+esc(fmtDateMed(v.date)+(v.time?' · '+dot(v.time):''))];
-  if(v.doctor)lines.push('👤 '+esc(docName(v)));if(v.place)lines.push('🏥 '+esc(placeName(v)));
+  const who=whoLine(v);if(who)lines.push(who);
   if(v.vaccines&&v.vaccines.length)lines.push('💉 '+esc(v.vaccines.join(', ')));
+  if(v.costReimb)lines.push(reimbLine(v));
   if(meds.length)lines.push('💊 Diresepkan: '+esc(meds.join(', ')));
   const pastNoRes=v.date<=ymd()&&!hasResult(v);
   return `<div class="item"><div class="ic p-${t[0]}">${t[2]}</div>
     <div class="t"><button class="nbody" data-a="vopen" data-id="${esc(v.id)}"><b>${esc(title)}</b><small>${lines.join('<br>')}</small>${growthChips(v)}${pastNoRes?'<span class="todo">Belum ada hasil · tap untuk melengkapi</span>':''}</button>
-    ${v.note?`<button class="notebtn" data-a="vnote" data-id="${esc(v.id)}">📝 Lihat catatan</button>`:''}</div></div>`;
+    ${v.costReimb&&!v.reimbReceived?`<button class="notebtn tf" data-a="vreimb" data-id="${esc(v.id)}">💸 Sudah ditransfer?</button>`:''}${v.note?`<button class="notebtn" data-a="vnote" data-id="${esc(v.id)}">📝 Lihat catatan</button>`:''}</div></div>`;
 }
 function growthCard(){
   const c=S.child,first=CHILD.split(' ')[0];
@@ -1013,11 +1024,11 @@ function viewVisits(){
   let h=growthCard();
   if(up.length){
     const n=up[0],d=daysDiff(today,n.date),t=vt(n.type);
-    const who=[n.doctor?'👤 '+esc(docName(n)):'',n.place?'🏥 '+esc(placeName(n)):''].filter(Boolean).join('<br>');
+    const who=whoLine(n);
     const ttl=t[1]+(n.type==='imunisasi'&&vaxLabel(n.vaxAge)?' · '+vaxLabel(n.vaxAge):'');
     h+=`<div class="next"><span class="k">Jadwal berikutnya</span><b>${esc(ttl)}</b>
-      <span class="m">${CAL}${esc(fmtDateLong(n.date))}${n.time?' · '+dot(n.time):''}${who?'<br>'+who:''}${n.vaccines&&n.vaccines.length?'<br>💉 '+esc(n.vaccines.join(', ')):''}</span>
-      <div class="acts"><span class="cd">${d===0?'Hari ini':d===1?'Besok':d+' hari lagi'}</span><button data-a="vopen" data-id="${esc(n.id)}">Perbaharui ✎</button>${n.note?`<button data-a="vnote" data-id="${esc(n.id)}">📝 Lihat catatan</button>`:''}</div></div>`;
+      <span class="m">${CAL}${esc(fmtDateLong(n.date))}${n.time?' · '+dot(n.time):''}${who?'<br>'+who:''}${n.vaccines&&n.vaccines.length?'<br>💉 '+esc(n.vaccines.join(', ')):''}${n.costReimb?'<br>'+reimbLine(n):''}</span>
+      <div class="acts"><span class="cd">${d===0?'Hari ini':d===1?'Besok':d+' hari lagi'}</span><button data-a="vopen" data-id="${esc(n.id)}">Perbaharui ✎</button>${n.costReimb&&!n.reimbReceived?`<button data-a="vreimb" data-id="${esc(n.id)}">💸 Sudah ditransfer?</button>`:''}${n.note?`<button data-a="vnote" data-id="${esc(n.id)}">📝 Lihat catatan</button>`:''}</div></div>`;
   }
   h+=`<div class="sec"><h2>Akan datang</h2></div>`;
   const rest=up.slice(1);
@@ -1045,7 +1056,6 @@ function viewMeds(){
   h+=act.length?`<section class="card">${act.map(medItem).join('')}</section>`:'<p class="hint" style="margin:0 2px 16px">Tidak ada obat yang sedang dikonsumsi. Tekan tombol + untuk menambah.</p>';
   h+=`<div class="sec"><h2>Riwayat obat</h2></div>`;
   h+=done.length?`<section class="card">${done.map(medItem).join('')}</section>`:'<p class="hint" style="margin:0 2px">Belum ada riwayat obat.</p>';
-  h+='<p class="hint" style="text-align:center;margin-top:14px">Suplemen harian tetap dicatat di menu Hari Ini.</p>';
   return h;
 }
 function viewHealth(){
@@ -1144,7 +1154,7 @@ function viewToday(){
           :`<button class="ibtn" data-a="tstart" data-i="${r.i}" aria-label="Mulai timer sesi ${r.i}" ${S.timer?'disabled':''}>▶</button>`}
           <button class="ibtn" data-a="tadd" data-i="${r.i}" aria-label="Isi menit manual sesi ${r.i}">+</button></div></div>`;
     }).join('')}</div>
-    <p class="hint">▶ pakai timer · + isi menit manual · Tap menit untuk tambah / ubah catatan</p></section>`;
+    <p class="hint">Klik ▶ untuk pakai timer atau klik + untuk isi menit<br>Tap menit untuk menambahkan / mengubah catatan.</p></section>`;
   const md=MANDI.map(([i,n])=>({i,n,log:L.find(l=>l.type==='mandi'&&l.session===i)}));
   h+=`<section class="card"><div class="card-h"><h2>Mandi</h2><span class="meta">${mF?CK:''}${md.filter(m=>m.log).length} dari ${md.length} sesi</span></div>
     <div class="supp-grid">${md.map(m=>`<button class="supp${m.log?' done':''}" data-a="mandi" data-i="${m.i}">
@@ -1261,6 +1271,7 @@ const A={
     quickLog({type:'supp',key:sl.key,session:sl.dose},sl.label);
   },
   gomeds:()=>{S.tab='health';S.hsub='meds';render();window.scrollTo(0,0);},
+  vreimb:b=>{const v=S.visits.find(x=>x.id===b.dataset.id);if(v)markReimb(v);},
   vnote:b=>{const v=S.visits.find(x=>x.id===b.dataset.id);if(v)openVisitNote(v);},
   nagain:b=>{const n=S.needs.find(x=>x.id===b.dataset.id);if(n)buyAgain(n);},
   ol:b=>{
