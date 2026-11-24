@@ -252,7 +252,7 @@ label.f textarea.link{font-size:13px;word-break:break-all}
 .perday{margin-bottom:12px}
 .item .t small{line-height:1.65}
 .next .m{line-height:1.7}
-.rcv{display:inline-block;font-size:11px;font-weight:800;color:#1F7A4D;background:#EEF9F2;border:1px solid #BFE5CF;border-radius:99px;padding:1px 8px;margin-left:4px;vertical-align:1px}
+.rcv{cursor:pointer;display:inline-block;font-size:11px;font-weight:800;color:#1F7A4D;background:#EEF9F2;border:1px solid #BFE5CF;border-radius:99px;padding:1px 8px;margin-left:4px;vertical-align:1px}
 .notebtn.tf{color:#1F7A4D;background:#EEF9F2;margin-right:6px}
 /* login */
 .login{min-height:calc(100vh - 32px);display:flex;flex-direction:column;justify-content:center;padding-bottom:40px}
@@ -427,7 +427,7 @@ function ageText(b,d){
 const rpNum=v=>{const n=parseInt(String(v||'').replace(/\D/g,''),10);return n>0?n:null;};
 const rp=n=>n?Number(n).toLocaleString('id-ID'):'';
 function whoLine(v){return [v.doctor?'👤 '+esc(docName(v)):'',v.place?'🏥 '+esc(placeName(v)):''].filter(Boolean).join(' · ');}
-function reimbLine(v){return '💰 Reimbursement Rp '+esc(rp(v.costReimb))+(v.reimbReceived?' <span class="rcv">✓ Diterima</span>':'');}
+function reimbLine(v){return '💰 Rp '+esc(rp(v.costReimb))+(v.reimbReceived?` <span class="rcv" role="button" data-a="vreimb" data-id="${esc(v.id)}" title="Klik untuk membatalkan">✓ Diterima</span>`:'');}
 function mandiName(i){const m=MANDI.find(x=>x[0]===i);return m?m[1]:'Sesi '+i;}
 function lsGet(){try{return localStorage.getItem(STORE_KEY);}catch(e){return null;}}
 function lsSet(v){try{if(v)localStorage.setItem(STORE_KEY,v);else localStorage.removeItem(STORE_KEY);}catch(e){}}
@@ -843,9 +843,9 @@ function openVisitNote(v){
 }
 async function markReimb(v){
   if(!guardWrite())return;
-  const prev=strip(v);
-  if(await saveDoc('visits',v.id,{...prev,reimbReceived:true,reimbReceivedAt:Date.now(),reimbRole:S.role,updatedAt:Date.now(),updatedRole:S.role}))
-    toast('Reimbursement ditandai diterima',{label:'Urungkan',fn:()=>saveDoc('visits',v.id,prev)});
+  const prev=strip(v),on=!v.reimbReceived;
+  if(await saveDoc('visits',v.id,{...prev,reimbReceived:on,reimbReceivedAt:on?Date.now():null,reimbRole:on?S.role:null,updatedAt:Date.now(),updatedRole:S.role}))
+    toast(on?'Reimbursement ditandai diterima':'Tanda diterima dibatalkan',{label:'Urungkan',fn:()=>saveDoc('visits',v.id,prev)});
 }
 function openChildForm(){
   if(!guardWrite())return;
@@ -998,7 +998,7 @@ function visitItem(v){
   const pastNoRes=v.date<=ymd()&&!hasResult(v);
   return `<div class="item"><div class="ic p-${t[0]}">${t[2]}</div>
     <div class="t"><button class="nbody" data-a="vopen" data-id="${esc(v.id)}"><b>${esc(title)}</b><small>${lines.join('<br>')}</small>${growthChips(v)}${pastNoRes?'<span class="todo">Belum ada hasil · tap untuk melengkapi</span>':''}</button>
-    ${v.costReimb&&!v.reimbReceived?`<button class="notebtn tf" data-a="vreimb" data-id="${esc(v.id)}">💸 Sudah ditransfer?</button>`:''}${v.note?`<button class="notebtn" data-a="vnote" data-id="${esc(v.id)}">📝 Lihat catatan</button>`:''}</div></div>`;
+    ${v.costReimb&&!v.reimbReceived?`<button class="notebtn tf" data-a="vreimb" data-id="${esc(v.id)}">💸 Ditransfer?</button>`:''}${v.note?`<button class="notebtn" data-a="vnote" data-id="${esc(v.id)}">📝 Catatan</button>`:''}</div></div>`;
 }
 function growthCard(){
   const c=S.child,first=CHILD.split(' ')[0];
@@ -1028,7 +1028,7 @@ function viewVisits(){
     const ttl=t[1]+(n.type==='imunisasi'&&vaxLabel(n.vaxAge)?' · '+vaxLabel(n.vaxAge):'');
     h+=`<div class="next"><span class="k">Jadwal berikutnya</span><b>${esc(ttl)}</b>
       <span class="m">${CAL}${esc(fmtDateLong(n.date))}${n.time?' · '+dot(n.time):''}${who?'<br>'+who:''}${n.vaccines&&n.vaccines.length?'<br>💉 '+esc(n.vaccines.join(', ')):''}${n.costReimb?'<br>'+reimbLine(n):''}</span>
-      <div class="acts"><span class="cd">${d===0?'Hari ini':d===1?'Besok':d+' hari lagi'}</span><button data-a="vopen" data-id="${esc(n.id)}">Perbaharui ✎</button>${n.costReimb&&!n.reimbReceived?`<button data-a="vreimb" data-id="${esc(n.id)}">💸 Sudah ditransfer?</button>`:''}${n.note?`<button data-a="vnote" data-id="${esc(n.id)}">📝 Lihat catatan</button>`:''}</div></div>`;
+      <div class="acts"><span class="cd">${d===0?'Hari ini':d===1?'Besok':d+' hari lagi'}</span><button data-a="vopen" data-id="${esc(n.id)}">Perbaharui ✎</button>${n.costReimb&&!n.reimbReceived?`<button data-a="vreimb" data-id="${esc(n.id)}">💸 Ditransfer?</button>`:''}${n.note?`<button data-a="vnote" data-id="${esc(n.id)}">📝 Catatan</button>`:''}</div></div>`;
   }
   h+=`<div class="sec"><h2>Akan datang</h2></div>`;
   const rest=up.slice(1);
