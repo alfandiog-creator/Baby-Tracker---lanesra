@@ -211,10 +211,10 @@ function mkDB(fs){
   const dref=r=>({id:r.id,path:r.path,
     get:async()=>wDoc(await FB.getDoc(r)),
     set:d=>FB.setDoc(r,d),update:d=>FB.updateDoc(r,d),delete:()=>FB.deleteDoc(r),
-    onSnapshot:(n,e)=>FB.onSnapshot(r,s=>n(wDoc(s)),e)});
+    onSnapshot:(n,e)=>FB.onSnapshot(r,{includeMetadataChanges:true},s=>n(wDoc(s)),e)});
   const cref=r=>({path:r.path,doc:id=>dref(id?FB.doc(r,id):FB.doc(r)),
     get:async()=>wQuery(await FB.getDocs(r)),
-    onSnapshot:(n,e)=>FB.onSnapshot(r,s=>n(wQuery(s)),e)});
+    onSnapshot:(n,e)=>FB.onSnapshot(r,{includeMetadataChanges:true},s=>n(wQuery(s)),e)});
   return {doc:p=>dref(FB.doc(fs,p)),collection:p=>cref(FB.collection(fs,p))};
 }
 let fbAuth=null;
