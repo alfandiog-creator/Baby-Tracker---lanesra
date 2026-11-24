@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#FAF6F1">
+<meta name="theme-color" content="#FFF8F9">
+<meta name="color-scheme" content="light">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Baby Tracker">
@@ -16,8 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#FAF6F1;--card:#FFFFFF;--ink:#2A2521;--muted:#857B72;--line:#ECE4DA;--acc:#2E8B7E;--acc-soft:#E3F2EF;--warm:#E07E55;--warm-soft:#FCEDE5;--danger:#C2473A;--r:18px}
-@media (prefers-color-scheme:dark){:root{--bg:#171513;--card:#211E1B;--ink:#F2ECE6;--muted:#A39A90;--line:#36312C;--acc:#5BBFB0;--acc-soft:#1F3532;--warm:#F0A07E;--warm-soft:#3A2820;--danger:#E57366}}
+:root{color-scheme:light;--bg:#FFF8F9;--card:#FFFFFF;--ink:#2E2326;--muted:#8C7A7E;--line:#F2E2E5;--acc:#F7879A;--acc-ink:#D4566E;--acc-soft:#FDEBEE;--warm:#E07E55;--warm-soft:#FCEDE5;--danger:#C2473A;--r:18px}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-tap-highlight-color:transparent}
 #app{max-width:520px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) calc(110px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left))}
@@ -25,35 +25,35 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;paddin
 button:disabled{opacity:.4;cursor:default}
 .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
 .brand{font-weight:800;font-size:21px;letter-spacing:-.01em;line-height:1.2}
-.brand small{display:block;font-size:15px;font-weight:700;color:var(--acc);letter-spacing:0;margin-top:2px}
-.role{font-size:12px;padding:6px 12px;border-radius:99px;background:var(--acc-soft);color:var(--acc);font-weight:700;white-space:nowrap;margin-top:2px}
+.brand small{display:block;font-size:15px;font-weight:700;color:var(--acc-ink);letter-spacing:0;margin-top:2px}
+.role{font-size:12px;padding:6px 12px;border-radius:99px;background:var(--acc-soft);color:var(--acc-ink);font-weight:700;white-space:nowrap;margin-top:2px}
 .datenav{display:flex;align-items:center;gap:8px;margin:14px 0}
 .datenav .lbl{flex:1;text-align:center;font-weight:700;font-size:15px}
-.datenav .lbl small{display:block;font-weight:600;font-size:11px;color:var(--acc)}
+.datenav .lbl small{display:block;font-weight:600;font-size:11px;color:var(--acc-ink)}
 .navbtn{width:38px;height:38px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:18px;line-height:1}
 .sumA{display:grid;grid-template-columns:repeat(4,1fr);background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 4px;margin-bottom:12px}
 .sumA div{text-align:center;border-left:1px solid var(--line);padding:0 2px}
 .sumA div:first-child{border-left:0}
 .sumA b{display:block;font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
 .sumA span{font-size:10.5px;color:var(--muted);font-weight:600}
-.sumA .full b{color:var(--acc)}
+.sumA .full b{color:var(--acc-ink)}
 .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
 .sum{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 6px;text-align:center}
 .sum b{display:block;font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
 .sum span{font-size:11px;color:var(--muted);font-weight:600}
-.sum.full b{color:var(--acc)}
+.sum.full b{color:var(--acc-ink)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:12px}
 .card-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px}
 .card-h h2{font-size:15px;margin:0;font-weight:800}
 .meta{font-size:12px;color:var(--muted);font-weight:600}
-.addbtn{font-size:12px;font-weight:800;color:var(--acc);padding:5px 10px;border-radius:99px;background:var(--acc-soft)}
+.addbtn{font-size:12px;font-weight:800;color:var(--acc-ink);padding:5px 10px;border-radius:99px;background:var(--acc-soft)}
 .supp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .supp{display:flex;gap:10px;align-items:center;text-align:left;padding:12px;border-radius:14px;border:1.5px dashed var(--line);min-height:62px}
 .supp .ic{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;flex:none;font-size:14px;font-weight:800}
 .supp b{font-size:14px}
 .supp small{display:block;color:var(--muted);font-size:11px;margin-top:1px}
 .supp.done{border:1.5px solid transparent;background:var(--acc-soft)}
-.supp.done .ic{background:var(--acc);border-color:var(--acc);color:#fff}
+.supp.done .ic{background:var(--acc);border-color:var(--acc-ink);color:#fff}
 .dots{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
 .dot{aspect-ratio:1;border-radius:50%;border:2px dashed var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:17px;color:var(--muted);position:relative}
 .dot small{font-size:10px;font-weight:600;line-height:1.25}
@@ -78,12 +78,14 @@ button:disabled{opacity:.4;cursor:default}
 .timerbar button{background:rgba(255,255,255,.22);color:#fff;padding:9px 12px;border-radius:11px;font-weight:800;font-size:13px}
 .timerbar button.solid{background:#fff;color:var(--warm)}
 .note-dot{font-size:11px;margin-left:2px}
+.cal{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;vertical-align:-2px;margin-right:5px;flex:none}
+.datenav .lbl .cal{width:16px;height:16px;vertical-align:-3px}
 .hint{font-size:12px;color:var(--muted);line-height:1.55;margin:8px 0 0}
 .linkbtn{display:block;margin:4px auto 0;font-size:13px;color:var(--muted);text-decoration:underline;font-weight:600}
 .tabs{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);z-index:6}
 .tabs .in{display:flex;width:100%;max-width:520px}
 .tab{flex:1;padding:9px 0 11px;font-size:11px;font-weight:600;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px}
-.tab.on{color:var(--acc);font-weight:800}
+.tab.on{color:var(--acc-ink);font-weight:800}
 .tab svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .banner{font-size:13px;padding:10px 12px;border-radius:12px;background:var(--warm-soft);margin:12px 0;line-height:1.45}
 #sb{position:fixed;inset:0;background:rgba(20,15,10,.45);display:flex;align-items:flex-start;justify-content:center;z-index:50;padding:calc(28px + env(safe-area-inset-top)) 12px 16px;overflow:auto}
@@ -99,17 +101,17 @@ input[type=time]::-webkit-date-and-time-value{text-align:left}
 .quick button{padding:7px 12px;border-radius:99px;border:1px solid var(--line);font-size:13px;font-weight:700}
 .btns{display:flex;gap:8px;margin-top:6px}
 .btn{flex:1;padding:13px;border-radius:14px;font-weight:800;border:1px solid var(--line);text-align:center}
-.btn.primary{background:var(--acc);color:#fff;border-color:var(--acc)}
+.btn.primary{background:var(--acc);color:#fff;border-color:var(--acc-ink)}
 .btn.danger{color:var(--danger);flex:0 0 auto;padding:13px 16px}
 .btn.full{display:block;width:100%}
 .info{font-size:12px;color:var(--muted);background:var(--bg);border-radius:12px;padding:10px 12px;margin-bottom:12px;line-height:1.55}
 .info b{color:var(--ink)}
 #toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 16px;border-radius:14px;font-size:14px;font-weight:600;display:flex;gap:16px;align-items:center;z-index:60;width:max-content;max-width:92vw;box-shadow:0 8px 24px rgba(0,0,0,.2)}
 #toast[hidden]{display:none}
-#toast button{color:var(--acc);font-weight:800;white-space:nowrap}
+#toast button{color:#FFB3C0;font-weight:800;white-space:nowrap}
 .seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:3px;margin:14px 0 12px}
 .seg button{flex:1;padding:8px;border-radius:9px;font-size:13px;font-weight:700;color:var(--muted)}
-.seg button.on{background:var(--acc-soft);color:var(--acc)}
+.seg button.on{background:var(--acc-soft);color:var(--acc-ink)}
 .chart{display:flex;align-items:flex-end;gap:3px;height:120px}
 .bar{flex:1;background:var(--warm);border-radius:4px 4px 0 0;min-height:3px}
 .bar.zero{background:var(--line)}
@@ -119,7 +121,7 @@ table.rk{width:100%;border-collapse:collapse;font-size:13px}
 .rk th{text-align:left;font-size:11px;color:var(--muted);font-weight:700;padding:4px 4px 6px}
 .rk td{padding:10px 4px;border-top:1px solid var(--line)}
 .rk tr[data-a]{cursor:pointer}
-.ok{color:var(--acc);font-weight:800}
+.ok{color:var(--acc-ink);font-weight:800}
 .no{color:var(--muted)}
 .step{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-top:1px solid var(--line)}
 .step:first-of-type{border-top:0}
@@ -132,7 +134,7 @@ table.rk{width:100%;border-collapse:collapse;font-size:13px}
 .hist{font-size:12px;color:var(--muted);margin:0 0 12px;padding-left:16px;line-height:1.6}
 .drow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:14px}
 .drow small{display:block;color:var(--muted);font-size:12px}
-.drow button{color:var(--acc);font-weight:800;font-size:13px}
+.drow button{color:var(--acc-ink);font-weight:800;font-size:13px}
 .btn.danger.armed{background:var(--danger);color:#fff;border-color:var(--danger)}
 .loading{color:var(--muted);font-size:13px;text-align:center;padding:6px 0 10px}
 /* kesehatan */
@@ -140,7 +142,7 @@ label.f select{display:block;width:100%;min-width:0;max-width:100%;min-height:46
 .f-lbl{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:6px}
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
 .chips button{padding:8px 12px;border-radius:99px;border:1px solid var(--line);font-size:13px;font-weight:700}
-.chips button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.chips button.on{background:var(--acc);border-color:var(--acc-ink);color:#fff}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .three label.f input{margin-top:0}
@@ -149,7 +151,7 @@ label.f select{display:block;width:100%;min-width:0;max-width:100%;min-height:46
 .next{display:block;width:100%;text-align:left;background:var(--acc);color:#fff;border-radius:18px;padding:14px 16px;margin-bottom:14px}
 .next .k{font-size:11px;font-weight:700;opacity:.85;text-transform:uppercase;letter-spacing:.05em}
 .next b{display:block;font-size:17px;margin:4px 0 2px}
-.next .m{display:block;font-size:12px;opacity:.92;line-height:1.5}
+.next .m{display:block;font-size:12.5px;font-weight:600;line-height:1.5}
 .next .cd{display:inline-block;margin-top:8px;background:rgba(255,255,255,.2);padding:4px 10px;border-radius:99px;font-size:12px;font-weight:800}
 .item{display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--line);width:100%;text-align:left}
 .card .item:first-child{border-top:0;padding-top:0}
@@ -160,7 +162,7 @@ label.f select{display:block;width:100%;min-width:0;max-width:100%;min-height:46
 .item .t small{display:block;color:var(--muted);font-size:12px;line-height:1.45;margin-top:1px;overflow-wrap:anywhere}
 .pill{font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:99px;white-space:nowrap;align-self:flex-start;background:var(--line);color:var(--muted)}
 .p-imunisasi{background:rgba(107,84,184,.14);color:#7A63C6}
-.p-kontrol,.p-on{background:var(--acc-soft);color:var(--acc)}
+.p-kontrol,.p-on{background:var(--acc-soft);color:var(--acc-ink)}
 .p-sakit{background:var(--warm-soft);color:var(--warm)}
 .item .ic.p-imunisasi{background:rgba(107,84,184,.14)}
 .item .ic.p-kontrol{background:var(--acc-soft)}
@@ -169,7 +171,7 @@ label.f select{display:block;width:100%;min-width:0;max-width:100%;min-height:46
 .two input[type=date],.two input[type=time]{padding-left:10px;padding-right:8px;font-size:15px}
 .mini{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
 .mini span{font-size:11px;font-weight:700;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:3px 7px}
-.btn.outline{border-color:var(--acc);color:var(--acc);margin-bottom:4px}
+.btn.outline{border-color:var(--acc-ink);color:var(--acc-ink);margin-bottom:4px}
 .sheet .hd{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 /* login */
 .login{min-height:calc(100vh - 32px);display:flex;flex-direction:column;justify-content:center;padding-bottom:40px}
@@ -178,7 +180,7 @@ label.f select{display:block;width:100%;min-width:0;max-width:100%;min-height:46
 .login h3{font-size:15px;margin:0 0 10px;font-weight:800}
 .rolepick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
 .rolepick button{padding:16px 6px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);font-weight:800;font-size:15px}
-.rolepick button.on{border-color:var(--acc);background:var(--acc-soft);color:var(--acc)}
+.rolepick button.on{border-color:var(--acc-ink);background:var(--acc-soft);color:var(--acc-ink)}
 .login label.f input{background:var(--card)}
 .login .btn{flex:none}
 .splash{min-height:70vh;display:grid;place-items:center;color:var(--muted);font-weight:600}
@@ -223,6 +225,7 @@ const LOGIN_ROLES=['bapak','ibu','suster'];
 const _UNUSED_PASS={bapak:'11dee26f66c750329a7678c66614c6c736832f99ea6cad502deb0ff8be64397e',ibu:'c4dc632dc461976bbee0d2d3204ea89fe473ef22f317d26d4fdcd0c8fc7f70f6',suster:'aff2baab55868d3ee0e195fed247648aa62bb2e00f16b232fd1e3bdbb2cf74e9'};
 const DEF={supplements:['Liprolac','Vit D'],olahragaSessions:5,tummySessions:5};
 const MANDI=[[1,'Pagi'],[2,'Sore']];
+const CAL='<svg class="cal" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>';
 const VTYPES=[['imunisasi','Imunisasi','💉'],['kontrol','Kontrol','🩺'],['sakit','Sakit','🤒'],['lainnya','Lainnya','📋']];
 const MFORMS=['Drop / sirup','Puyer','Salep','Tetes','Lainnya'];
 const PH={mandi:'mis. pakai air hangat, sekalian keramas, rewel saat dibilas',olahraga:'mis. sepeda kaki, angkat tangan, pijat kaki, ±5 menit',tummy:'mis. sudah kuat angkat kepala, rewel di menit ke-3, di atas dada Ibu'};
@@ -461,7 +464,7 @@ function openAccount(){
 }
 function openTummyAdd(slot){
   if(!guardWrite())return;
-  openSheet(`<h3>Tummy time sesi ${slot}</h3><p class="sub">Jam dicatat otomatis saat disimpan.</p>
+  openSheet(`<h3>Tummy time sesi ${slot}</h3><p class="sub">${CAL}${esc(fmtDateLong(S.date))} · jam dicatat otomatis</p>
     <label class="f">Durasi (menit)<input id="f-min" type="number" inputmode="decimal" min="0.5" step="0.5" placeholder="mis. 5"></label>
     <div class="quick">${[2,3,5,10,15].map(m=>`<button data-s="q" data-v="${m}">${m} mnt</button>`).join('')}</div>
     <label class="f">Catatan (opsional)<textarea id="f-note" rows="2" placeholder="${esc(PH.tummy)}"></textarea></label>
@@ -491,7 +494,7 @@ function openDetail(id){
   const isT=l.type==='tummy',ro=!S.canWrite;
   const title=l.type==='olahraga'?'Olahraga sesi '+l.session:l.type==='mandi'?'Mandi '+mandiName(l.session).toLowerCase():'Tummy time sesi '+l.session;
   const hist=(l.history||[]).slice().reverse();
-  openSheet(`<h3>${esc(title)}</h3><p class="sub">${esc(fmtDateLong(l.date))}</p>
+  openSheet(`<h3>${esc(title)}</h3><p class="sub">${CAL}${esc(fmtDateLong(l.date))}</p>
     ${isT?`<label class="f">Durasi (menit)<input id="f-min" type="number" inputmode="decimal" min="0.5" step="0.5" value="${esc(l.minutes)}" ${ro?'disabled':''}></label>`:''}
     <label class="f">Catatan<textarea id="f-note" rows="2" placeholder="${esc(isT?PH.tummy:PH[l.type]||PH.olahraga)}" ${ro?'disabled':''}>${esc(l.note||'')}</textarea></label>
     <label class="f">Jam (ubah kalau perlu)<input id="f-time" type="time" value="${esc(l.time||'')}" ${ro?'disabled':''}></label>
@@ -525,7 +528,7 @@ function openSuppManage(){
   const draw=sh=>{
     sh.querySelector('.slist').innerHTML=list.map((s,i)=>`<div class="sitem"><span>${esc(s)}</span>${isAdmin()?`<button data-s="rm" data-i="${i}" aria-label="Hapus ${esc(s)}">✕</button>`:''}</div>`).join('')||'<span class="empty">Belum ada</span>';
   };
-  openSheet(`<h3>Edit suplemen</h3><p class="sub">Tambahkan suplemen baru kalau nanti ada.</p>
+  openSheet(`<h3>Ubah suplemen</h3><p class="sub">Tambahkan suplemen baru kalau nanti ada.</p>
     <div class="sadd"><input id="f-supp" placeholder="Nama suplemen, mis. Zinc" maxlength="30"><button class="btn" data-s="add">Tambah</button></div>
     <div class="slist"></div>
     <div class="btns"><button class="btn" data-s="close">Batal</button><button class="btn primary" data-s="save">Simpan</button></div>`,
@@ -551,7 +554,7 @@ function openDeleted(){
   const del=S.logs.filter(l=>l.deleted);
   const by=l=>{const h=(l.history||[]).filter(x=>x.action==='hapus'||x.action==='batal').pop();return h?roleName(h.byRole):'—';};
   let armed=false;
-  openSheet(`<h3>Catatan terhapus</h3><p class="sub">${esc(fmtDateLong(S.date))}</p>
+  openSheet(`<h3>Catatan terhapus</h3><p class="sub">${CAL}${esc(fmtDateLong(S.date))}</p>
     ${del.length?del.map(l=>`<div class="drow"><div>${esc(logTitle(l))}<small>Jam ${dot(l.time)} · dihapus oleh ${esc(by(l))}</small></div><button data-s="restore" data-id="${esc(l.id)}">Pulihkan</button></div>`).join(''):'<p class="sub">Tidak ada.</p>'}
     <div class="btns">${del.length?'<button class="btn danger" data-s="purge">Hapus semua</button>':''}<button class="btn" data-s="close">Tutup</button></div>`,
     {onClick:async b=>{
@@ -656,13 +659,13 @@ function openMedDetail(m){
   const st=medStatus(m),v=S.visits.find(x=>x.id===m.visitId);
   const rows=[];
   if(m.rule)rows.push(['Aturan pakai',m.rule]);
-  rows.push(['Mulai',fmtDateMed(m.start)]);
-  if(m.end)rows.push(['Selesai',fmtDateMed(m.end)+' ('+(daysDiff(m.start,m.end)+1)+' hari)']);
+  rows.push(['Mulai',fmtDateMed(m.start),1]);
+  if(m.end)rows.push(['Selesai',fmtDateMed(m.end)+' ('+(daysDiff(m.start,m.end)+1)+' hari)',1]);
   if(v)rows.push(['Dari kunjungan',(v.title||vt(v.type)[1])+(v.doctor?' · '+v.doctor:'')+' · '+fmtDM(v.date,true)]);
   if(m.note)rows.push(['Catatan',m.note]);
   openSheet(`<div class="hd"><h3>${esc(m.name)}</h3><span class="pill ${st.cls}">${esc(st.label)}</span></div>
     <p class="sub">${esc([m.form,m.complaint?'untuk '+m.complaint:''].filter(Boolean).join(' · '))}</p>
-    <div class="info" style="font-size:13px;line-height:1.7">${rows.map(([k,x])=>`<b>${k}:</b> ${esc(x)}`).join('<br>')}</div>
+    <div class="info" style="font-size:13px;line-height:1.7">${rows.map(([k,x,c])=>`<b>${k}:</b> ${c?CAL:''}${esc(x)}`).join('<br>')}</div>
     ${stampInfo(m)}
     ${st.active&&S.canWrite?'<button class="btn full outline" data-s="finish">✓ Tandai selesai hari ini</button>':''}
     <div class="btns">${isAdmin()?'<button class="btn danger" data-s="del">Hapus</button>':''}<button class="btn" data-s="close">Tutup</button>${S.canWrite?'<button class="btn primary" data-s="edit">Ubah</button>':''}</div>`,
@@ -689,6 +692,7 @@ const ICON={
 function visitItem(v){
   const t=vt(v.type),meds=S.meds.filter(m=>m.visitId===v.id).map(m=>m.name);
   const lines=[fmtDateMed(v.date)+(v.time?' · '+dot(v.time):''),[v.doctor,v.place].filter(Boolean).join(' · ')].filter(Boolean).map(esc);
+  lines[0]=CAL+lines[0];
   if(meds.length)lines.push('Diresepkan: '+esc(meds.join(', ')));
   if(v.note)lines.push('📝 '+esc(clip(v.note,90)));
   const gr=[v.bb?`<span>BB ${fmtNum(v.bb)} kg</span>`:'',v.pb?`<span>PB ${fmtNum(v.pb)} cm</span>`:'',v.lk?`<span>LK ${fmtNum(v.lk)} cm</span>`:''].join('');
@@ -704,7 +708,7 @@ function viewVisits(){
   if(up.length){
     const n=up[0],d=daysDiff(today,n.date),t=vt(n.type);
     h+=`<button class="next" data-a="vopen" data-id="${esc(n.id)}"><span class="k">Jadwal berikutnya</span><b>${esc(n.title||t[1])}</b>
-      <span class="m">${esc(fmtDateLong(n.date))}${n.time?' · '+dot(n.time):''}${n.doctor||n.place?'<br>'+esc([n.doctor,n.place].filter(Boolean).join(' · ')):''}</span>
+      <span class="m">${CAL}${esc(fmtDateLong(n.date))}${n.time?' · '+dot(n.time):''}${n.doctor||n.place?'<br>'+esc([n.doctor,n.place].filter(Boolean).join(' · ')):''}</span>
       <span class="cd">${d===0?'Hari ini':d===1?'Besok':d+' hari lagi'}</span></button>`;
   }
   h+=`<div class="sec"><h2>Akan datang</h2><button class="addbtn" data-a="vadd">+ Tambah</button></div>`;
@@ -718,11 +722,13 @@ function viewVisits(){
 }
 function medItem(m){
   const st=medStatus(m),v=S.visits.find(x=>x.id===m.visitId);
-  const lines=[[m.complaint?'Untuk '+m.complaint:'',m.rule].filter(Boolean).join(' · ')];
-  lines.push(st.active?'Mulai '+fmtDM(m.start)+(v&&v.doctor?' · dari '+v.doctor:''):fmtDM(m.start)+' – '+fmtDM(m.end,true)+' ('+(daysDiff(m.start,m.end)+1)+' hari)');
-  if(m.note)lines.push('📝 '+clip(m.note,80));
+  const lines=[];
+  const info=[m.complaint?'Untuk '+m.complaint:'',m.rule].filter(Boolean).join(' · ');
+  if(info)lines.push(esc(info));
+  lines.push(CAL+esc(st.active?'Mulai '+fmtDM(m.start)+(v&&v.doctor?' · dari '+v.doctor:''):fmtDM(m.start)+' – '+fmtDM(m.end,true)+' ('+(daysDiff(m.start,m.end)+1)+' hari)'));
+  if(m.note)lines.push(esc('📝 '+clip(m.note,80)));
   return `<button class="item" data-a="mopen" data-id="${esc(m.id)}"><div class="ic ${st.active?'p-sakit':''}">💊</div>
-    <div class="t"><b>${esc(m.name)}</b><small>${lines.filter(Boolean).map(esc).join('<br>')}</small></div>
+    <div class="t"><b>${esc(m.name)}</b><small>${lines.join('<br>')}</small></div>
     <span class="pill ${st.cls}">${esc(st.label)}</span></button>`;
 }
 function viewMeds(){
@@ -782,7 +788,7 @@ function viewToday(){
   const delCount=S.logs.filter(l=>l.deleted).length;
   const nd=l=>l&&l.note?'<span class="note-dot">📝</span>':'';
   let h=`<div class="datenav"><button class="navbtn" data-a="prev" aria-label="Hari sebelumnya">‹</button>
-    <div class="lbl">${esc(fmtDateLong(S.date))}${isToday?'<small>Hari ini</small>':'<small><button data-a="gotoday" style="color:inherit;font-weight:700">Kembali ke hari ini</button></small>'}</div>
+    <div class="lbl">${CAL}${esc(fmtDateLong(S.date))}${isToday?'<small>Hari ini</small>':'<small><button data-a="gotoday" style="color:inherit;font-weight:700">Kembali ke hari ini</button></small>'}</div>
     <button class="navbtn" data-a="next" aria-label="Hari berikutnya" ${isToday?'disabled':''}>›</button></div>`;
   const mDone=MANDI.filter(([i])=>L.some(l=>l.type==='mandi'&&l.session===i)).length;
   h+=`<div class="sumA">
@@ -791,10 +797,10 @@ function viewToday(){
     <div><b>${fmtMin(tMin)}</b><span>Mnt tummy</span></div>
     <div class="${mDone===MANDI.length?'full':''}"><b>${mDone}/${MANDI.length}</b><span>Mandi</span></div></div>`;
   if(S.loading)h+='<div class="loading">Memuat catatan…</div>';
-  h+=`<section class="card"><div class="card-h"><h2>Suplemen</h2><button class="addbtn" data-a="suppman">Edit</button></div>
+  h+=`<section class="card"><div class="card-h"><h2>Suplemen</h2><button class="addbtn" data-a="suppman">Ubah</button></div>
     ${supp.length?`<div class="supp-grid">${supp.map(s=>`<button class="supp${s.log?' done':''}" data-a="supp" data-i="${s.i}">
       <span class="ic">${s.log?'✓':''}</span><span><b>${esc(s.n)}</b><small>${s.log?dot(s.log.time)+' · '+esc(roleName(s.log.createdRole)):'Belum'}</small></span></button>`).join('')}</div>`
-      :'<p class="empty">Belum ada suplemen. Tekan Edit untuk menambah.</p>'}
+      :'<p class="empty">Belum ada suplemen. Tekan Ubah untuk menambah.</p>'}
     <p class="hint">Tap untuk centang, tap lagi untuk membatalkan.</p></section>`;
   h+=`<section class="card"><div class="card-h"><h2>Olahraga</h2><span class="meta">${oDone} dari ${c.olahragaSessions} sesi</span></div>
     <div class="dots">${ol.map(o=>`<button class="dot${o.log?' done':''}" data-a="ol" data-i="${o.i}" aria-label="Olahraga sesi ${o.i}">${o.i}${o.log?`<small>${dot(o.log.time)}</small><small class="who">${esc(roleName(o.log.createdRole))}</small>${o.log.note?'<span class="nb">📝</span>':''}`:''}</button>`).join('')}</div>
