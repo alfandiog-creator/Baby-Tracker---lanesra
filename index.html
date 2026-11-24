@@ -642,7 +642,7 @@ function toast(msg,act){
   el.innerHTML='<span>'+esc(msg)+'</span>'+(act?'<button id="tbtn">'+esc(act.label)+'</button>':'');
   el.hidden=false;
   if(act)$('#tbtn').onclick=()=>{el.hidden=true;act.fn();};
-  clearTimeout(toastT);toastT=setTimeout(()=>{el.hidden=true;},act?6000:2800);
+  clearTimeout(toastT);toastT=setTimeout(()=>{el.hidden=true;},act?3000:2000);
 }
 
 function openAccount(){
