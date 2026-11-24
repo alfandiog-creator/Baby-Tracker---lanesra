@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FAF6F1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Baby Tracker">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Baby Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FAF6F1;--card:#FFFFFF;--ink:#2A2521;--muted:#857B72;--line:#ECE4DA;--acc:#2E8B7E;--acc-soft:#E3F2EF;--warm:#E07E55;--warm-soft:#FCEDE5;--danger:#C2473A;--r:18px}
+@media (prefers-color-scheme:dark){:root{--bg:#171513;--card:#211E1B;--ink:#F2ECE6;--muted:#A39A90;--line:#36312C;--acc:#5BBFB0;--acc-soft:#1F3532;--warm:#F0A07E;--warm-soft:#3A2820;--danger:#E57366}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;-webkit-tap-highlight-color:transparent}
+#app{max-width:520px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) calc(110px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left))}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+button:disabled{opacity:.4;cursor:default}
+.top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.brand{font-weight:800;font-size:21px;letter-spacing:-.01em;line-height:1.2}
+.brand small{display:block;font-size:15px;font-weight:700;color:var(--acc);letter-spacing:0;margin-top:2px}
+.role{font-size:12px;padding:6px 12px;border-radius:99px;background:var(--acc-soft);color:var(--acc);font-weight:700;white-space:nowrap;margin-top:2px}
+.datenav{display:flex;align-items:center;gap:8px;margin:14px 0}
+.datenav .lbl{flex:1;text-align:center;font-weight:700;font-size:15px}
+.datenav .lbl small{display:block;font-weight:600;font-size:11px;color:var(--acc)}
+.navbtn{width:38px;height:38px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:18px;line-height:1}
+.sumA{display:grid;grid-template-columns:repeat(4,1fr);background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 4px;margin-bottom:12px}
+.sumA div{text-align:center;border-left:1px solid var(--line);padding:0 2px}
+.sumA div:first-child{border-left:0}
+.sumA b{display:block;font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.sumA span{font-size:10.5px;color:var(--muted);font-weight:600}
+.sumA .full b{color:var(--acc)}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.sum{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 6px;text-align:center}
+.sum b{display:block;font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
+.sum span{font-size:11px;color:var(--muted);font-weight:600}
+.sum.full b{color:var(--acc)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.card-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px}
+.card-h h2{font-size:15px;margin:0;font-weight:800}
+.meta{font-size:12px;color:var(--muted);font-weight:600}
+.addbtn{font-size:12px;font-weight:800;color:var(--acc);padding:5px 10px;border-radius:99px;background:var(--acc-soft)}
+.supp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.supp{display:flex;gap:10px;align-items:center;text-align:left;padding:12px;border-radius:14px;border:1.5px dashed var(--line);min-height:62px}
+.supp .ic{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;flex:none;font-size:14px;font-weight:800}
+.supp b{font-size:14px}
+.supp small{display:block;color:var(--muted);font-size:11px;margin-top:1px}
+.supp.done{border:1.5px solid transparent;background:var(--acc-soft)}
+.supp.done .ic{background:var(--acc);border-color:var(--acc);color:#fff}
+.dots{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.dot{aspect-ratio:1;border-radius:50%;border:2px dashed var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:17px;color:var(--muted);position:relative}
+.dot small{font-size:10px;font-weight:600;line-height:1.25}
+.dot small.who{font-size:9px;opacity:.9}
+.dot.done{background:var(--acc);border:2px solid var(--acc);color:#fff}
+.dot .nb{position:absolute;top:-2px;right:-2px;font-size:12px}
+.trow{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.trows .trow:first-child{border-top:0}
+.tnum{width:28px;height:28px;border-radius:50%;background:var(--warm-soft);color:var(--warm);font-weight:800;font-size:13px;display:grid;place-items:center;flex:none}
+.trow.has .tnum{background:var(--warm);color:#fff}
+.tparts{flex:1;display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:34px}
+.chip{padding:6px 12px;border-radius:12px;background:var(--warm-soft);font-size:13px;font-weight:700;text-align:left;line-height:1.25}
+.chip small{display:block;font-size:10px;font-weight:600;color:var(--muted)}
+.chip.live{background:var(--warm);color:#fff}
+.empty{color:var(--muted);font-size:13px}
+.tsum{font-size:12px;color:var(--muted);font-weight:600}
+.tact{display:flex;gap:6px}
+.ibtn{width:38px;height:38px;border-radius:12px;border:1px solid var(--line);font-size:15px;font-weight:700}
+.timerbar{position:sticky;top:8px;z-index:5;display:flex;align-items:center;gap:10px;background:var(--warm);color:#fff;padding:12px 12px 12px 16px;border-radius:16px;margin:12px 0;box-shadow:0 8px 24px rgba(0,0,0,.14)}
+.timerbar .clock{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums}
+.timerbar .grow{flex:1;font-size:12px;line-height:1.35}
+.timerbar button{background:rgba(255,255,255,.22);color:#fff;padding:9px 12px;border-radius:11px;font-weight:800;font-size:13px}
+.timerbar button.solid{background:#fff;color:var(--warm)}
+.note-dot{font-size:11px;margin-left:2px}
+.hint{font-size:12px;color:var(--muted);line-height:1.55;margin:8px 0 0}
+.linkbtn{display:block;margin:4px auto 0;font-size:13px;color:var(--muted);text-decoration:underline;font-weight:600}
+.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);z-index:6}
+.tabs .in{display:flex;width:100%;max-width:520px}
+.tab{flex:1;padding:9px 0 11px;font-size:11px;font-weight:600;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px}
+.tab.on{color:var(--acc);font-weight:800}
+.tab svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.banner{font-size:13px;padding:10px 12px;border-radius:12px;background:var(--warm-soft);margin:12px 0;line-height:1.45}
+#sb{position:fixed;inset:0;background:rgba(20,15,10,.45);display:flex;align-items:flex-start;justify-content:center;z-index:50;padding:calc(28px + env(safe-area-inset-top)) 12px 16px;overflow:auto}
+#sb[hidden]{display:none}
+.sheet{background:var(--card);width:100%;max-width:500px;border-radius:20px;padding:18px 18px 0;max-height:calc(100vh - 60px - env(safe-area-inset-top));max-height:calc(100dvh - 60px - env(safe-area-inset-top));overflow:auto;box-shadow:0 16px 40px rgba(0,0,0,.2)}
+.sheet .btns{position:sticky;bottom:0;background:var(--card);padding:12px 0 16px;margin-top:4px}
+.sheet h3{margin:0 0 2px;font-size:18px;font-weight:800}
+.sub{color:var(--muted);font-size:13px;margin:0 0 14px}
+label.f{display:block;font-size:12px;color:var(--muted);font-weight:700;margin-bottom:12px}
+label.f input,label.f textarea,.sadd input{display:block;width:100%;min-width:0;max-width:100%;-webkit-appearance:none;appearance:none;min-height:46px;margin-top:5px;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:16px}
+input[type=time]::-webkit-date-and-time-value{text-align:left}
+.quick{display:flex;gap:6px;flex-wrap:wrap;margin:-4px 0 14px}
+.quick button{padding:7px 12px;border-radius:99px;border:1px solid var(--line);font-size:13px;font-weight:700}
+.btns{display:flex;gap:8px;margin-top:6px}
+.btn{flex:1;padding:13px;border-radius:14px;font-weight:800;border:1px solid var(--line);text-align:center}
+.btn.primary{background:var(--acc);color:#fff;border-color:var(--acc)}
+.btn.danger{color:var(--danger);flex:0 0 auto;padding:13px 16px}
+.btn.full{display:block;width:100%}
+.info{font-size:12px;color:var(--muted);background:var(--bg);border-radius:12px;padding:10px 12px;margin-bottom:12px;line-height:1.55}
+.info b{color:var(--ink)}
+#toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 16px;border-radius:14px;font-size:14px;font-weight:600;display:flex;gap:16px;align-items:center;z-index:60;width:max-content;max-width:92vw;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+#toast[hidden]{display:none}
+#toast button{color:var(--acc);font-weight:800;white-space:nowrap}
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:3px;margin:14px 0 12px}
+.seg button{flex:1;padding:8px;border-radius:9px;font-size:13px;font-weight:700;color:var(--muted)}
+.seg button.on{background:var(--acc-soft);color:var(--acc)}
+.chart{display:flex;align-items:flex-end;gap:3px;height:120px}
+.bar{flex:1;background:var(--warm);border-radius:4px 4px 0 0;min-height:3px}
+.bar.zero{background:var(--line)}
+.xl{display:flex;gap:3px;font-size:9px;color:var(--muted);margin-top:5px;font-weight:600}
+.xl span{flex:1;text-align:center;white-space:nowrap}
+table.rk{width:100%;border-collapse:collapse;font-size:13px}
+.rk th{text-align:left;font-size:11px;color:var(--muted);font-weight:700;padding:4px 4px 6px}
+.rk td{padding:10px 4px;border-top:1px solid var(--line)}
+.rk tr[data-a]{cursor:pointer}
+.ok{color:var(--acc);font-weight:800}
+.no{color:var(--muted)}
+.step{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-top:1px solid var(--line)}
+.step:first-of-type{border-top:0}
+.slist{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.sitem{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:12px;background:var(--bg);font-weight:600}
+.sitem button{width:30px;height:30px;border-radius:9px;color:var(--danger);font-weight:800}
+.sadd{display:flex;gap:8px;margin-bottom:12px}
+.sadd input{margin:0;flex:1}
+.sadd .btn{flex:0 0 auto;padding:11px 16px}
+.hist{font-size:12px;color:var(--muted);margin:0 0 12px;padding-left:16px;line-height:1.6}
+.drow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:14px}
+.drow small{display:block;color:var(--muted);font-size:12px}
+.drow button{color:var(--acc);font-weight:800;font-size:13px}
+.btn.danger.armed{background:var(--danger);color:#fff;border-color:var(--danger)}
+.loading{color:var(--muted);font-size:13px;text-align:center;padding:6px 0 10px}
+/* kesehatan */
+label.f select{display:block;width:100%;min-width:0;max-width:100%;min-height:46px;margin-top:5px;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:16px}
+.f-lbl{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:6px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.chips button{padding:8px 12px;border-radius:99px;border:1px solid var(--line);font-size:13px;font-weight:700}
+.chips button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.three label.f input{margin-top:0}
+.sec{display:flex;justify-content:space-between;align-items:center;margin:6px 2px 8px}
+.sec h2{font-size:12px;margin:0;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.next{display:block;width:100%;text-align:left;background:var(--acc);color:#fff;border-radius:18px;padding:14px 16px;margin-bottom:14px}
+.next .k{font-size:11px;font-weight:700;opacity:.85;text-transform:uppercase;letter-spacing:.05em}
+.next b{display:block;font-size:17px;margin:4px 0 2px}
+.next .m{display:block;font-size:12px;opacity:.92;line-height:1.5}
+.next .cd{display:inline-block;margin-top:8px;background:rgba(255,255,255,.2);padding:4px 10px;border-radius:99px;font-size:12px;font-weight:800}
+.item{display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--line);width:100%;text-align:left}
+.card .item:first-child{border-top:0;padding-top:0}
+.card .item:last-child{padding-bottom:0}
+.item .ic{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;font-size:17px;flex:none;background:var(--line)}
+.item .t{flex:1;min-width:0}
+.item .t b{font-size:14px;display:block}
+.item .t small{display:block;color:var(--muted);font-size:12px;line-height:1.45;margin-top:1px;overflow-wrap:anywhere}
+.pill{font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:99px;white-space:nowrap;align-self:flex-start;background:var(--line);color:var(--muted)}
+.p-imunisasi{background:rgba(107,84,184,.14);color:#7A63C6}
+.p-kontrol,.p-on{background:var(--acc-soft);color:var(--acc)}
+.p-sakit{background:var(--warm-soft);color:var(--warm)}
+.item .ic.p-imunisasi{background:rgba(107,84,184,.14)}
+.item .ic.p-kontrol{background:var(--acc-soft)}
+.item .ic.p-sakit{background:var(--warm-soft)}
+.two>label,.three>label{min-width:0}
+.two input[type=date],.two input[type=time]{padding-left:10px;padding-right:8px;font-size:15px}
+.mini{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.mini span{font-size:11px;font-weight:700;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:3px 7px}
+.btn.outline{border-color:var(--acc);color:var(--acc);margin-bottom:4px}
+.sheet .hd{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+/* login */
+.login{min-height:calc(100vh - 32px);display:flex;flex-direction:column;justify-content:center;padding-bottom:40px}
+.login .brand{font-size:26px;text-align:center;margin-bottom:26px}
+.login .brand small{font-size:18px;margin-top:4px}
+.login h3{font-size:15px;margin:0 0 10px;font-weight:800}
+.rolepick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.rolepick button{padding:16px 6px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);font-weight:800;font-size:15px}
+.rolepick button.on{border-color:var(--acc);background:var(--acc-soft);color:var(--acc)}
+.login label.f input{background:var(--card)}
+.login .btn{flex:none}
+.splash{min-height:70vh;display:grid;place-items:center;color:var(--muted);font-weight:600}
+.migr{background:var(--acc-soft);border-radius:14px;padding:12px 14px;margin:12px 0;font-size:13px;line-height:1.5}
+.migr .btn{margin-top:8px;display:block;width:100%}
+.lerr{color:var(--danger);font-size:13px;font-weight:600;margin:-4px 0 12px;min-height:18px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="sb" hidden><div class="sheet" id="sheet"></div></div>
+<div id="toast" hidden></div>
+<script type="module">
+import * as FB from './firebase.js';
+const FIREBASE_CONFIG={
+  apiKey:"AIzaSyC7qO6aydRDtx8Ch-ieuLWbGJy1jOBTDic",
+  authDomain:"baby-tracker--lanesra.firebaseapp.com",
+  projectId:"baby-tracker--lanesra",
+  storageBucket:"baby-tracker--lanesra.firebasestorage.app",
+  messagingSenderId:"304580975140",
+  appId:"1:304580975140:web:916980f8a50fc9c6c7d6b1"
+};
+const EMAIL_DOMAIN='lanesra.app';
+/* Firestore dibungkus supaya bentuknya sama dengan penyimpanan versi sebelumnya */
+const wDoc=s=>({id:s.id,exists:s.exists(),data:()=>s.data(),metadata:s.metadata});
+const wQuery=q=>({docs:q.docs.map(wDoc),size:q.size,empty:q.empty,metadata:q.metadata});
+function mkDB(fs){
+  const dref=r=>({id:r.id,path:r.path,
+    get:async()=>wDoc(await FB.getDoc(r)),
+    set:d=>FB.setDoc(r,d),update:d=>FB.updateDoc(r,d),delete:()=>FB.deleteDoc(r),
+    onSnapshot:(n,e)=>FB.onSnapshot(r,s=>n(wDoc(s)),e)});
+  const cref=r=>({path:r.path,doc:id=>dref(id?FB.doc(r,id):FB.doc(r)),
+    get:async()=>wQuery(await FB.getDocs(r)),
+    onSnapshot:(n,e)=>FB.onSnapshot(r,s=>n(wQuery(s)),e)});
+  return {doc:p=>dref(FB.doc(fs,p)),collection:p=>cref(FB.collection(fs,p))};
+}
+let fbAuth=null;
+const TZ='Asia/Jakarta';
+const CHILD='Lanesra Graciella';
+const ROLES={bapak:'Bapak',ibu:'Ibu',suster:'Suster',ayah:'Bapak',nanny:'Suster'};
+const LOGIN_ROLES=['bapak','ibu','suster'];
+const _UNUSED_PASS={bapak:'11dee26f66c750329a7678c66614c6c736832f99ea6cad502deb0ff8be64397e',ibu:'c4dc632dc461976bbee0d2d3204ea89fe473ef22f317d26d4fdcd0c8fc7f70f6',suster:'aff2baab55868d3ee0e195fed247648aa62bb2e00f16b232fd1e3bdbb2cf74e9'};
+const DEF={supplements:['Liprolac','Vit D'],olahragaSessions:5,tummySessions:5};
+const MANDI=[[1,'Pagi'],[2,'Sore']];
+const VTYPES=[['imunisasi','Imunisasi','💉'],['kontrol','Kontrol','🩺'],['sakit','Sakit','🤒'],['lainnya','Lainnya','📋']];
+const MFORMS=['Drop / sirup','Puyer','Salep','Tetes','Lainnya'];
+const PH={mandi:'mis. pakai air hangat, sekalian keramas, rewel saat dibilas',olahraga:'mis. sepeda kaki, angkat tangan, pijat kaki, ±5 menit',tummy:'mis. sudah kuat angkat kepala, rewel di menit ke-3, di atas dada Ibu'};
+const STORE_KEY='bt_role_v1';
+const S={authReady:false,subscribed:false,migrated:true,migration:null,migrating:false,db:null,uid:null,canWrite:true,local:false,role:null,loginPick:null,loginErr:'',
+  cfg:{...DEF,supplements:[...DEF.supplements]},date:null,logs:[],timer:null,
+  tab:'today',loading:true,stale:false,err:'',localStore:{},
+  recapRange:7,recap:null,visits:[],meds:[],hsub:'visits',pending:new Set(),pendingRender:false,sheetHandler:null};
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const range=n=>Array.from({length:Math.max(0,n)},(_,i)=>i+1);
+function parts(fmt,d){const p={};fmt.formatToParts(d).forEach(x=>{p[x.type]=x.value;});return p;}
+const F_DATE=new Intl.DateTimeFormat('en-US',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit'});
+const F_TIME=new Intl.DateTimeFormat('en-US',{timeZone:TZ,hour:'2-digit',minute:'2-digit',hourCycle:'h23'});
+function ymd(d){const p=parts(F_DATE,d||new Date());return p.year+'-'+p.month+'-'+p.day;}
+function timeFromMs(ms){const p=parts(F_TIME,new Date(ms));return String(+p.hour%24).padStart(2,'0')+':'+p.minute;}
+const nowTime=()=>timeFromMs(Date.now());
+const dot=t=>t?String(t).replace(':','.'):'';
+function addDays(d,n){const x=new Date(Date.UTC(+d.slice(0,4),+d.slice(5,7)-1,+d.slice(8,10)));x.setUTCDate(x.getUTCDate()+n);return x.toISOString().slice(0,10);}
+const dUTC=d=>new Date(Date.UTC(+d.slice(0,4),+d.slice(5,7)-1,+d.slice(8,10)));
+function fmtDateLong(d){return new Intl.DateTimeFormat('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(dUTC(d));}
+function fmtShort(d){return new Intl.DateTimeFormat('id-ID',{weekday:'short',day:'numeric',month:'short',timeZone:'UTC'}).format(dUTC(d));}
+function fmtStamp(ms){return new Intl.DateTimeFormat('id-ID',{day:'numeric',month:'short',timeZone:TZ}).format(new Date(ms))+' '+dot(timeFromMs(ms));}
+function fmtMin(m){m=+m||0;return Number.isInteger(m)?String(m):m.toFixed(1).replace('.',',');}
+function clock(ms){const s=Math.max(0,Math.floor(ms/1000)),m=Math.floor(s/60),h=Math.floor(m/60);return (h?h+':'+String(m%60).padStart(2,'0'):String(m).padStart(2,'0'))+':'+String(s%60).padStart(2,'0');}
+const active=()=>S.logs.filter(l=>!l.deleted);
+const byCreated=(a,b)=>(a.createdAt||0)-(b.createdAt||0);
+const isAdmin=()=>S.role==='bapak'||S.role==='ibu';
+const roleName=r=>ROLES[r]||'—';
+function sessionsOf(type){
+  const n=type==='olahraga'?S.cfg.olahragaSessions:S.cfg.tummySessions;
+  let mx=0;active().forEach(l=>{if(l.type===type&&l.session>mx)mx=l.session;});
+  return range(Math.max(n,mx));
+}
+function logTitle(l){
+  if(l.type==='supp')return l.key;
+  if(l.type==='olahraga')return 'Olahraga sesi '+l.session;
+  if(l.type==='mandi')return 'Mandi '+mandiName(l.session).toLowerCase();
+  return 'Tummy time sesi '+l.session+' · '+fmtMin(l.minutes)+' mnt';
+}
+const vt=k=>VTYPES.find(x=>x[0]===k)||VTYPES[3];
+const newId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+function fmtDM(d,yr){return new Intl.DateTimeFormat('id-ID',yr?{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}:{day:'numeric',month:'short',timeZone:'UTC'}).format(dUTC(d));}
+function fmtDateMed(d){return new Intl.DateTimeFormat('id-ID',{weekday:'short',day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}).format(dUTC(d));}
+const daysDiff=(a,b)=>Math.round((dUTC(b)-dUTC(a))/86400000);
+const num=v=>{const n=parseFloat(String(v==null?'':v).replace(',','.'));return n>0&&n<1000?Math.round(n*10)/10:null;};
+const fmtNum=n=>String(n).replace('.',',');
+const strip=o=>{const c={...o};delete c.id;return c;};
+const clip=(t,n)=>{t=String(t||'');return t.length>n?t.slice(0,n-1)+'…':t;};
+function mandiName(i){const m=MANDI.find(x=>x[0]===i);return m?m[1]:'Sesi '+i;}
+function lsGet(){try{return localStorage.getItem(STORE_KEY);}catch(e){return null;}}
+function lsSet(v){try{if(v)localStorage.setItem(STORE_KEY,v);else localStorage.removeItem(STORE_KEY);}catch(e){}}
+async function sha(s){
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+/* ---------- data layer ---------- */
+function dayCol(date){return S.db.collection('days/'+date+'/logs');}
+const chains={};
+function serial(k,fn){const p=(chains[k]||Promise.resolve()).then(fn,fn);chains[k]=p.catch(()=>{});return p;}
+function handleErr(e){
+  const code=e&&e.code;
+  toast(code==='permission-denied'?'Akses ditolak. Cek aturan keamanan (Rules) di Firebase.':code==='resource-exhausted'?'Batas pemakaian harian Firebase tercapai, coba lagi besok.':'Gagal menyimpan, coba lagi.');
+  render();
+}
+function guardWrite(){if(!S.canWrite){toast('Akun ini hanya punya akses lihat');return false;}return true;}
+
+async function addLog(entry,date){
+  date=date||S.date;
+  const base={type:entry.type,key:entry.key==null?null:entry.key,session:entry.session==null?null:entry.session,
+    minutes:entry.minutes==null?null:entry.minutes,time:entry.time||nowTime(),note:entry.note||'',date,
+    createdAt:Date.now(),createdBy:S.uid||'local',createdRole:S.role,deleted:false,history:[]};
+  if(S.local){
+    const id='l'+Math.random().toString(36).slice(2,10);
+    (S.localStore[date]=S.localStore[date]||[]).push({id,...base});
+    if(date===S.date){S.logs=S.localStore[date];render();}
+    return id;
+  }
+  const ref=dayCol(date).doc();
+  try{await serial(ref.id,()=>ref.set(base));return ref.id;}catch(e){handleErr(e);return null;}
+}
+async function updateLog(l,changes,action){
+  const before={};for(const k in changes)before[k]=l[k]==null?null:l[k];
+  const hist=[...(l.history||[]),{at:Date.now(),byRole:S.role,action,before}].slice(-20);
+  const patch={...changes,history:hist,updatedAt:Date.now(),updatedRole:S.role};
+  if(S.local){Object.assign(l,patch);render();return true;}
+  try{await serial(l.id,()=>dayCol(l.date).doc(l.id).update(patch));return true;}catch(e){handleErr(e);return false;}
+}
+async function undoAdd(id,date){
+  if(S.local){const arr=S.localStore[date]||[];const i=arr.findIndex(x=>x.id===id);if(i>=0)arr.splice(i,1);render();return;}
+  try{await serial(id,()=>dayCol(date).doc(id).delete());}catch(e){handleErr(e);}
+}
+async function quickLog(entry,label){
+  if(!guardWrite())return;
+  const k=entry.type+':'+(entry.key!=null?entry.key:entry.session);
+  if(S.pending.has(k))return;
+  S.pending.add(k);
+  const date=S.date,t=nowTime();
+  const id=await addLog({...entry,time:t},date);
+  S.pending.delete(k);
+  if(id)toast(label+' dicatat · '+dot(t),{label:'Urungkan',fn:()=>undoAdd(id,date)});
+}
+async function uncheckSupp(l){
+  if(!guardWrite())return;
+  if(await updateLog(l,{deleted:true},'batal'))toast(l.key+' dibatalkan',{label:'Urungkan',fn:()=>{const f=S.logs.find(x=>x.id===l.id)||l;updateLog(f,{deleted:false},'pulihkan');}});
+}
+async function setTimerDoc(data){
+  if(S.local){S.timer=data.running?data:null;render();return;}
+  try{await serial('timer',()=>S.db.doc('timer/tummy').set(data));}catch(e){handleErr(e);}
+}
+async function startTimer(slot){
+  if(!guardWrite())return;
+  if(S.timer){toast('Timer sesi '+S.timer.slot+' masih berjalan');return;}
+  await setTimerDoc({running:true,start:Date.now(),slot,date:S.date,byRole:S.role});
+}
+async function finishTimer(t,minutes){
+  await setTimerDoc({running:false});
+  const id=await addLog({type:'tummy',session:t.slot,minutes,time:timeFromMs(t.start)},t.date);
+  if(id)toast('Tummy time sesi '+t.slot+': '+fmtMin(minutes)+' menit dicatat');
+}
+function stopTimer(){
+  const t=S.timer;if(!t||!guardWrite())return;
+  const ms=Date.now()-t.start;
+  if(ms<20000){
+    openSheet(`<h3>Timer baru ${Math.round(ms/1000)} detik</h3><p class="sub">Tetap catat sebagai 1 menit, atau buang saja?</p>
+      <div class="btns"><button class="btn" data-s="drop">Buang</button><button class="btn primary" data-s="keep">Catat 1 menit</button></div>`,
+      {onClick:b=>{if(b.dataset.s==='drop'){closeSheet();setTimerDoc({running:false});}if(b.dataset.s==='keep'){closeSheet();finishTimer(t,1);}}});
+    return;
+  }
+  finishTimer(t,Math.max(1,Math.round(ms/60000)));
+}
+function cancelTimer(){
+  if(!S.timer||!guardWrite())return;
+  openSheet(`<h3>Batalkan timer?</h3><p class="sub">Durasi yang berjalan tidak akan dicatat.</p>
+    <div class="btns"><button class="btn" data-s="close">Tidak</button><button class="btn primary" data-s="yes">Ya, batalkan</button></div>`,
+    {onClick:b=>{if(b.dataset.s==='yes'){closeSheet();setTimerDoc({running:false});}}});
+}
+async function saveSupplements(list){
+  const cfg={...S.cfg,supplements:list};
+  if(S.local){S.cfg=cfg;render();return true;}
+  try{await serial('cfg',()=>S.db.doc('config/main').set({supplements:list,olahragaSessions:cfg.olahragaSessions,tummySessions:cfg.tummySessions}));return true;}catch(e){handleErr(e);return false;}
+}
+
+async function saveDoc(col,id,data){
+  if(S.local){const arr=S[col];const i=arr.findIndex(x=>x.id===id);const row={id,...data};if(i>=0)arr[i]=row;else arr.push(row);render();return true;}
+  try{await serial(col+'/'+id,()=>S.db.doc(col+'/'+id).set(data));return true;}catch(e){handleErr(e);return false;}
+}
+async function removeDoc(col,id){
+  if(S.local){const arr=S[col];const i=arr.findIndex(x=>x.id===id);if(i>=0)arr.splice(i,1);render();return true;}
+  try{await serial(col+'/'+id,()=>S.db.doc(col+'/'+id).delete());return true;}catch(e){handleErr(e);return false;}
+}
+async function delWithUndo(col,row,label){
+  if(!isAdmin()||!guardWrite())return;
+  if(await removeDoc(col,row.id))toast(label+' dihapus',{label:'Urungkan',fn:()=>saveDoc(col,row.id,strip(row))});
+}
+
+/* ---------- subscriptions ---------- */
+let unsubDay=null,dayTimer=null;
+function subscribeDay(){
+  if(S.local){S.logs=(S.localStore[S.date]=S.localStore[S.date]||[]);S.loading=false;render();return;}
+  if(unsubDay)unsubDay();
+  clearTimeout(dayTimer);
+  const date=S.date;
+  S.logs=[];S.loading=true;S.stale=false;S.err='';render();
+  dayTimer=setTimeout(()=>{if(date===S.date){S.stale=true;S.loading=false;render();}},10000);
+  unsubDay=dayCol(date).onSnapshot(snap=>{
+    if(date!==S.date)return;
+    S.logs=snap.docs.map(d=>({id:d.id,...d.data()}));
+    S.loading=false;
+    if(!snap.metadata.fromCache){clearTimeout(dayTimer);S.stale=false;}
+    render();
+  },(err)=>{clearTimeout(dayTimer);S.loading=false;S.err=(err&&err.code==='permission-denied')?'Akses ke data ditolak. Pastikan aturan keamanan (Rules) Firestore sudah dipasang dan email akun sesuai.':'Catatan tidak bisa dimuat. Tutup lalu buka lagi aplikasinya.';render();});
+}
+function subscribeShared(){
+  S.db.doc('config/main').onSnapshot(s=>{
+    const d=s.exists?s.data():{};
+    S.cfg={...DEF,supplements:Array.isArray(d.supplements)?[...d.supplements]:[...DEF.supplements]};
+    render();
+  },()=>{});
+  S.db.doc('meta/migration').onSnapshot(s=>{S.migrated=s.exists;render();},()=>{});
+  S.db.collection('visits').onSnapshot(s=>{S.visits=s.docs.map(d=>({id:d.id,...d.data()}));render();},()=>{});
+  S.db.collection('meds').onSnapshot(s=>{S.meds=s.docs.map(d=>({id:d.id,...d.data()}));render();},()=>{});
+  S.db.doc('timer/tummy').onSnapshot(s=>{
+    const d=s.exists?s.data():null;S.timer=d&&d.running?d:null;render();
+  },()=>{});
+}
+async function loadRecap(){
+  const n=S.recapRange,today=ymd();
+  const days=range(n).map(i=>addDays(today,-(i-1)));
+  S.recap={loading:true,n};render();
+  const out=[];
+  for(let i=0;i<days.length;i+=6){
+    const chunk=days.slice(i,i+6);
+    const res=await Promise.all(chunk.map(async d=>{
+      if(S.local)return [d,S.localStore[d]||[]];
+      try{const snap=await dayCol(d).get();return [d,snap.docs.map(x=>({id:x.id,...x.data()}))];}catch(e){return [d,null];}
+    }));
+    out.push(...res);
+  }
+  if(S.recapRange!==n)return;
+  S.recap={loading:false,n,days:out};render();
+}
+
+/* ---------- sheet & toast ---------- */
+function openSheet(html,opt){
+  opt=opt||{};
+  $('#sheet').innerHTML=html;
+  S.sheetHandler=opt.onClick||null;
+  $('#sb').hidden=false;$('#sb').scrollTop=0;$('#sheet').scrollTop=0;
+  try{$('#sheet').scrollIntoView({block:'nearest'});}catch(e){}
+  if(opt.onMount)opt.onMount($('#sheet'));
+}
+function closeSheet(){$('#sb').hidden=true;S.sheetHandler=null;if(S.pendingRender){S.pendingRender=false;render();}}
+$('#sb').addEventListener('click',e=>{if(e.target.id==='sb')closeSheet();});
+$('#sheet').addEventListener('click',e=>{
+  const b=e.target.closest('[data-s]');if(!b)return;
+  if(b.dataset.s==='close'){closeSheet();return;}
+  if(S.sheetHandler)S.sheetHandler(b,$('#sheet'));
+});
+let toastT;
+function toast(msg,act){
+  const el=$('#toast');
+  el.innerHTML='<span>'+esc(msg)+'</span>'+(act?'<button id="tbtn">'+esc(act.label)+'</button>':'');
+  el.hidden=false;
+  if(act)$('#tbtn').onclick=()=>{el.hidden=true;act.fn();};
+  clearTimeout(toastT);toastT=setTimeout(()=>{el.hidden=true;},act?6000:2800);
+}
+
+function openAccount(){
+  openSheet(`<h3>Masuk sebagai ${esc(roleName(S.role))}</h3><p class="sub">Untuk ganti akun, keluar dulu lalu masuk lagi dengan password akun lain.</p>
+    <div class="btns"><button class="btn" data-s="close">Tutup</button><button class="btn primary" data-s="out">Keluar</button></div>`,
+    {onClick:b=>{if(b.dataset.s==='out'){closeSheet();FB.signOut(fbAuth).catch(()=>location.reload());}}});
+}
+function openTummyAdd(slot){
+  if(!guardWrite())return;
+  openSheet(`<h3>Tummy time sesi ${slot}</h3><p class="sub">Jam dicatat otomatis saat disimpan.</p>
+    <label class="f">Durasi (menit)<input id="f-min" type="number" inputmode="decimal" min="0.5" step="0.5" placeholder="mis. 5"></label>
+    <div class="quick">${[2,3,5,10,15].map(m=>`<button data-s="q" data-v="${m}">${m} mnt</button>`).join('')}</div>
+    <label class="f">Catatan (opsional)<textarea id="f-note" rows="2" placeholder="${esc(PH.tummy)}"></textarea></label>
+    <div class="btns"><button class="btn" data-s="close">Batal</button><button class="btn primary" data-s="save">Simpan</button></div>`,
+    {onClick:async(b,sh)=>{
+      const s=b.dataset.s;
+      if(s==='q'){sh.querySelector('#f-min').value=b.dataset.v;return;}
+      if(s!=='save')return;
+      const m=parseFloat(String(sh.querySelector('#f-min').value).replace(',','.'));
+      if(!(m>0)||m>600){toast('Isi durasinya dulu ya');return;}
+      const note=sh.querySelector('#f-note').value.trim().slice(0,300);
+      closeSheet();
+      const id=await addLog({type:'tummy',session:slot,minutes:Math.round(m*10)/10,note,time:nowTime()});
+      if(id)toast('Tummy time sesi '+slot+' dicatat · '+dot(nowTime()));
+    }});
+}
+function histLine(h){
+  const act={ubah:'Diubah',hapus:'Dihapus',pulihkan:'Dipulihkan',batal:'Dibatalkan'}[h.action]||h.action;
+  const b=h.before||{},p=[];
+  if('time' in b&&b.time)p.push('jam '+dot(b.time));
+  if('minutes' in b&&b.minutes!=null)p.push(fmtMin(b.minutes)+' mnt');
+  if('note' in b&&b.note)p.push('catatan “'+b.note+'”');
+  return `<li>${act} oleh <b>${esc(roleName(h.byRole))}</b> · ${fmtStamp(h.at)}${p.length&&h.action==='ubah'?' · sebelumnya '+esc(p.join(', ')):''}</li>`;
+}
+function openDetail(id){
+  const l=S.logs.find(x=>x.id===id);if(!l)return;
+  const isT=l.type==='tummy',ro=!S.canWrite;
+  const title=l.type==='olahraga'?'Olahraga sesi '+l.session:l.type==='mandi'?'Mandi '+mandiName(l.session).toLowerCase():'Tummy time sesi '+l.session;
+  const hist=(l.history||[]).slice().reverse();
+  openSheet(`<h3>${esc(title)}</h3><p class="sub">${esc(fmtDateLong(l.date))}</p>
+    ${isT?`<label class="f">Durasi (menit)<input id="f-min" type="number" inputmode="decimal" min="0.5" step="0.5" value="${esc(l.minutes)}" ${ro?'disabled':''}></label>`:''}
+    <label class="f">Catatan<textarea id="f-note" rows="2" placeholder="${esc(isT?PH.tummy:PH[l.type]||PH.olahraga)}" ${ro?'disabled':''}>${esc(l.note||'')}</textarea></label>
+    <label class="f">Jam (ubah kalau perlu)<input id="f-time" type="time" value="${esc(l.time||'')}" ${ro?'disabled':''}></label>
+    <div class="info">Dicatat oleh <b>${esc(roleName(l.createdRole))}</b> · ${fmtStamp(l.createdAt)}${l.updatedRole?`<br>Terakhir diubah oleh <b>${esc(roleName(l.updatedRole))}</b> · ${fmtStamp(l.updatedAt)}`:''}</div>
+    ${hist.length?`<ul class="hist">${hist.map(histLine).join('')}</ul>`:''}
+    <div class="btns">${isAdmin()&&!ro?'<button class="btn danger" data-s="del">Hapus</button>':''}<button class="btn" data-s="close">Tutup</button>${ro?'':'<button class="btn primary" data-s="save">Simpan</button>'}</div>`,
+    {onClick:async(b,sh)=>{
+      const s=b.dataset.s;
+      if(s==='del'){
+        closeSheet();
+        if(await updateLog(l,{deleted:true},'hapus'))toast(title+' dihapus',{label:'Urungkan',fn:()=>{const f=S.logs.find(x=>x.id===l.id)||l;updateLog(f,{deleted:false},'pulihkan');}});
+        return;
+      }
+      if(s!=='save')return;
+      const ch={};
+      const t=sh.querySelector('#f-time').value;if(t&&t!==l.time)ch.time=t;
+      const n=sh.querySelector('#f-note').value.trim().slice(0,300);if(n!==(l.note||''))ch.note=n;
+      if(isT){
+        const m=parseFloat(String(sh.querySelector('#f-min').value).replace(',','.'));
+        if(!(m>0)||m>600){toast('Durasi harus lebih dari 0');return;}
+        const mm=Math.round(m*10)/10;if(mm!==l.minutes)ch.minutes=mm;
+      }
+      closeSheet();
+      if(!Object.keys(ch).length)return;
+      if(await updateLog(l,ch,'ubah'))toast('Perubahan disimpan');
+    }});
+}
+function openSuppManage(){
+  if(!guardWrite())return;
+  let list=[...S.cfg.supplements];
+  const draw=sh=>{
+    sh.querySelector('.slist').innerHTML=list.map((s,i)=>`<div class="sitem"><span>${esc(s)}</span>${isAdmin()?`<button data-s="rm" data-i="${i}" aria-label="Hapus ${esc(s)}">✕</button>`:''}</div>`).join('')||'<span class="empty">Belum ada</span>';
+  };
+  openSheet(`<h3>Edit suplemen</h3><p class="sub">Tambahkan suplemen baru kalau nanti ada.</p>
+    <div class="sadd"><input id="f-supp" placeholder="Nama suplemen, mis. Zinc" maxlength="30"><button class="btn" data-s="add">Tambah</button></div>
+    <div class="slist"></div>
+    <div class="btns"><button class="btn" data-s="close">Batal</button><button class="btn primary" data-s="save">Simpan</button></div>`,
+    {onMount:draw,onClick:async(b,sh)=>{
+      const s=b.dataset.s;
+      if(s==='add'){
+        const inp=sh.querySelector('#f-supp'),n=inp.value.trim();
+        if(!n)return;
+        if(!list.some(x=>x.toLowerCase()===n.toLowerCase()))list.push(n);
+        inp.value='';draw(sh);return;
+      }
+      if(s==='rm'){list.splice(+b.dataset.i,1);draw(sh);return;}
+      if(s==='save'){
+        const inp=sh.querySelector('#f-supp'),n=inp.value.trim();
+        if(n&&!list.some(x=>x.toLowerCase()===n.toLowerCase()))list.push(n);
+        closeSheet();
+        if(await saveSupplements(list.slice(0,10)))toast('Daftar suplemen disimpan');
+      }
+    }});
+  setTimeout(()=>{const i=$('#f-supp');if(i)i.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const b=$('[data-s=add]');if(b)b.click();}});},0);
+}
+function openDeleted(){
+  const del=S.logs.filter(l=>l.deleted);
+  const by=l=>{const h=(l.history||[]).filter(x=>x.action==='hapus'||x.action==='batal').pop();return h?roleName(h.byRole):'—';};
+  let armed=false;
+  openSheet(`<h3>Catatan terhapus</h3><p class="sub">${esc(fmtDateLong(S.date))}</p>
+    ${del.length?del.map(l=>`<div class="drow"><div>${esc(logTitle(l))}<small>Jam ${dot(l.time)} · dihapus oleh ${esc(by(l))}</small></div><button data-s="restore" data-id="${esc(l.id)}">Pulihkan</button></div>`).join(''):'<p class="sub">Tidak ada.</p>'}
+    <div class="btns">${del.length?'<button class="btn danger" data-s="purge">Hapus semua</button>':''}<button class="btn" data-s="close">Tutup</button></div>`,
+    {onClick:async b=>{
+      if(b.dataset.s==='purge'){
+        if(!armed){armed=true;b.classList.add('armed');b.textContent='Yakin? Tap lagi';return;}
+        closeSheet();
+        await purgeDeleted(del.map(l=>({id:l.id,date:l.date})));
+        return;
+      }
+      if(b.dataset.s!=='restore')return;
+      const l=S.logs.find(x=>x.id===b.dataset.id);if(!l)return;
+      closeSheet();
+      if(await updateLog(l,{deleted:false},'pulihkan'))toast('Catatan dipulihkan');
+    }});
+}
+async function purgeDeleted(items){
+  if(!isAdmin()||!guardWrite())return;
+  if(S.local){items.forEach(it=>{const arr=S.localStore[it.date]||[];const i=arr.findIndex(x=>x.id===it.id);if(i>=0)arr.splice(i,1);});render();toast('Catatan terhapus dibersihkan');return;}
+  let fail=0;
+  for(const it of items){try{await serial(it.id,()=>dayCol(it.date).doc(it.id).delete());}catch(e){fail++;}}
+  toast(fail?fail+' catatan gagal dihapus, coba lagi':'Catatan terhapus dibersihkan');
+}
+
+/* ---------- kesehatan: forms ---------- */
+function stampInfo(r){
+  if(!r||!r.createdAt)return '';
+  return `<div class="info">Dicatat oleh <b>${esc(roleName(r.createdRole))}</b> · ${fmtStamp(r.createdAt)}${r.updatedRole?`<br>Terakhir diubah oleh <b>${esc(roleName(r.updatedRole))}</b> · ${fmtStamp(r.updatedAt)}`:''}</div>`;
+}
+function pickChip(b,sh){b.parentElement.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));}
+function openVisitForm(v){
+  if(!guardWrite())return;
+  const e=v||{type:'kontrol',date:ymd()};
+  const val=k=>esc(e[k]==null?'':(k==='bb'||k==='pb'||k==='lk')?fmtNum(e[k]):e[k]);
+  openSheet(`<h3>${v?'Kunjungan dokter':'Tambah kunjungan'}</h3><p class="sub">Bisa untuk jadwal ke depan atau yang sudah lewat</p>
+    <div class="f-lbl">Jenis</div>
+    <div class="chips">${VTYPES.map(([k,l])=>`<button data-s="chip" data-v="${k}" class="${e.type===k?'on':''}">${l}</button>`).join('')}</div>
+    <label class="f">Keperluan<input id="v-title" maxlength="60" value="${val('title')}" placeholder="mis. PCV 2, kontrol bulanan"></label>
+    <div class="two"><label class="f">Tanggal<input id="v-date" type="date" value="${val('date')}"></label><label class="f">Jam (opsional)<input id="v-time" type="time" value="${val('time')}"></label></div>
+    <div class="two"><label class="f">Dokter<input id="v-doc" maxlength="60" value="${val('doctor')}" placeholder="mis. dr. …, Sp.A"></label><label class="f">Tempat<input id="v-place" maxlength="60" value="${val('place')}" placeholder="RS / klinik"></label></div>
+    <div class="f-lbl">Hasil pemeriksaan (isi setelah kunjungan)</div>
+    <div class="three"><label class="f"><input id="v-bb" inputmode="decimal" placeholder="BB kg" value="${val('bb')}"></label><label class="f"><input id="v-pb" inputmode="decimal" placeholder="PB cm" value="${val('pb')}"></label><label class="f"><input id="v-lk" inputmode="decimal" placeholder="LK cm" value="${val('lk')}"></label></div>
+    <label class="f">Catatan dokter<textarea id="v-note" rows="3" maxlength="600" placeholder="mis. diagnosis, saran, obat yang diresepkan">${val('note')}</textarea></label>
+    ${stampInfo(v)}
+    <div class="btns">${v&&isAdmin()?'<button class="btn danger" data-s="del">Hapus</button>':''}<button class="btn" data-s="close">Batal</button><button class="btn primary" data-s="save">Simpan</button></div>`,
+    {onClick:async(b,sh)=>{
+      const s=b.dataset.s;
+      if(s==='chip')return pickChip(b,sh);
+      if(s==='del'){closeSheet();return delWithUndo('visits',v,'Kunjungan');}
+      if(s!=='save')return;
+      const g=id=>sh.querySelector('#'+id).value.trim();
+      const type=(sh.querySelector('.chips .on')||{dataset:{v:'lainnya'}}).dataset.v;
+      const date=g('v-date');
+      if(!date){toast('Isi tanggalnya dulu ya');return;}
+      const data={type,title:g('v-title')||vt(type)[1],date,time:g('v-time'),doctor:g('v-doc'),place:g('v-place'),
+        bb:num(g('v-bb')),pb:num(g('v-pb')),lk:num(g('v-lk')),note:g('v-note'),
+        createdAt:v?v.createdAt:Date.now(),createdRole:v?v.createdRole:S.role};
+      if(v){data.updatedAt=Date.now();data.updatedRole=S.role;}
+      closeSheet();
+      if(await saveDoc('visits',v?v.id:newId(),data))toast(v?'Kunjungan diperbarui':'Kunjungan dicatat');
+    }});
+}
+function openMedForm(m){
+  if(!guardWrite())return;
+  const e=m||{form:MFORMS[0],start:ymd()};
+  const val=k=>esc(e[k]==null?'':e[k]);
+  const vs=S.visits.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  openSheet(`<h3>${m?'Ubah obat':'Tambah obat'}</h3><p class="sub">Siapa yang mencatat tersimpan otomatis</p>
+    <label class="f">Nama obat<input id="m-name" maxlength="60" value="${val('name')}" placeholder="mis. Paracetamol drop"></label>
+    <div class="f-lbl">Bentuk</div>
+    <div class="chips">${MFORMS.map(f=>`<button data-s="chip" data-v="${esc(f)}" class="${e.form===f?'on':''}">${esc(f)}</button>`).join('')}</div>
+    <label class="f">Untuk keluhan<input id="m-for" maxlength="60" value="${val('complaint')}" placeholder="mis. demam, ruam, pilek"></label>
+    <label class="f">Aturan pakai (sesuai resep / label)<input id="m-rule" maxlength="100" value="${val('rule')}" placeholder="mis. 3x sehari bila demam"></label>
+    <div class="two"><label class="f">Mulai<input id="m-start" type="date" value="${val('start')}"></label><label class="f">Selesai (opsional)<input id="m-end" type="date" value="${val('end')}"></label></div>
+    <label class="f">Dari kunjungan dokter (opsional)<select id="m-visit"><option value="">— Tidak ada —</option>${vs.map(v=>`<option value="${esc(v.id)}"${e.visitId===v.id?' selected':''}>${esc(clip(v.title||vt(v.type)[1],28))} · ${esc(fmtDM(v.date,true))}</option>`).join('')}</select></label>
+    <label class="f">Catatan<textarea id="m-note" rows="2" maxlength="300" placeholder="mis. rewel saat diminumkan, muntah sedikit">${val('note')}</textarea></label>
+    <p class="hint" style="margin:-4px 0 10px">Kosongkan tanggal selesai kalau obat masih dikonsumsi.</p>
+    ${stampInfo(m)}
+    <div class="btns"><button class="btn" data-s="close">Batal</button><button class="btn primary" data-s="save">Simpan</button></div>`,
+    {onClick:async(b,sh)=>{
+      const s=b.dataset.s;
+      if(s==='chip')return pickChip(b,sh);
+      if(s!=='save')return;
+      const g=id=>sh.querySelector('#'+id).value.trim();
+      const name=g('m-name');if(!name){toast('Isi nama obatnya dulu ya');return;}
+      const start=g('m-start');if(!start){toast('Isi tanggal mulai dulu ya');return;}
+      const end=g('m-end');if(end&&end<start){toast('Tanggal selesai tidak boleh sebelum mulai');return;}
+      const data={name,form:(sh.querySelector('.chips .on')||{dataset:{v:''}}).dataset.v,complaint:g('m-for'),rule:g('m-rule'),
+        start,end,visitId:g('m-visit'),note:g('m-note'),
+        createdAt:m?m.createdAt:Date.now(),createdRole:m?m.createdRole:S.role};
+      if(m){data.updatedAt=Date.now();data.updatedRole=S.role;}
+      closeSheet();
+      if(await saveDoc('meds',m?m.id:newId(),data))toast(m?'Obat diperbarui':'Obat dicatat');
+    }});
+}
+function medStatus(m){
+  const t=ymd();
+  if(m.end&&m.end<=t)return {active:false,label:'Selesai',cls:''};
+  if(m.start>t)return {active:true,label:'Mulai '+fmtDM(m.start),cls:'p-on'};
+  return {active:true,label:'Hari ke-'+(daysDiff(m.start,t)+1),cls:'p-on'};
+}
+function openMedDetail(m){
+  const st=medStatus(m),v=S.visits.find(x=>x.id===m.visitId);
+  const rows=[];
+  if(m.rule)rows.push(['Aturan pakai',m.rule]);
+  rows.push(['Mulai',fmtDateMed(m.start)]);
+  if(m.end)rows.push(['Selesai',fmtDateMed(m.end)+' ('+(daysDiff(m.start,m.end)+1)+' hari)']);
+  if(v)rows.push(['Dari kunjungan',(v.title||vt(v.type)[1])+(v.doctor?' · '+v.doctor:'')+' · '+fmtDM(v.date,true)]);
+  if(m.note)rows.push(['Catatan',m.note]);
+  openSheet(`<div class="hd"><h3>${esc(m.name)}</h3><span class="pill ${st.cls}">${esc(st.label)}</span></div>
+    <p class="sub">${esc([m.form,m.complaint?'untuk '+m.complaint:''].filter(Boolean).join(' · '))}</p>
+    <div class="info" style="font-size:13px;line-height:1.7">${rows.map(([k,x])=>`<b>${k}:</b> ${esc(x)}`).join('<br>')}</div>
+    ${stampInfo(m)}
+    ${st.active&&S.canWrite?'<button class="btn full outline" data-s="finish">✓ Tandai selesai hari ini</button>':''}
+    <div class="btns">${isAdmin()?'<button class="btn danger" data-s="del">Hapus</button>':''}<button class="btn" data-s="close">Tutup</button>${S.canWrite?'<button class="btn primary" data-s="edit">Ubah</button>':''}</div>`,
+    {onClick:async b=>{
+      const s=b.dataset.s;
+      if(s==='edit')return openMedForm(m);
+      if(s==='del'){closeSheet();return delWithUndo('meds',m,m.name);}
+      if(s==='finish'){
+        if(!guardWrite())return;
+        const t=ymd(),prev=strip(m);
+        closeSheet();
+        if(await saveDoc('meds',m.id,{...prev,end:t<m.start?m.start:t,updatedAt:Date.now(),updatedRole:S.role}))
+          toast(m.name+' dipindah ke riwayat',{label:'Urungkan',fn:()=>saveDoc('meds',m.id,prev)});
+      }
+    }});
+}
+
+/* ---------- views ---------- */
+const ICON={
+  today:'<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4M8.5 14.5l2.5 2.5 4.5-5"/></svg>',
+  recap:'<svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+  health:'<svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/><path d="M8 12h2.5l1.5-3 2 5 1.5-2H17"/></svg>'
+};
+function visitItem(v){
+  const t=vt(v.type),meds=S.meds.filter(m=>m.visitId===v.id).map(m=>m.name);
+  const lines=[fmtDateMed(v.date)+(v.time?' · '+dot(v.time):''),[v.doctor,v.place].filter(Boolean).join(' · ')].filter(Boolean).map(esc);
+  if(meds.length)lines.push('Diresepkan: '+esc(meds.join(', ')));
+  if(v.note)lines.push('📝 '+esc(clip(v.note,90)));
+  const gr=[v.bb?`<span>BB ${fmtNum(v.bb)} kg</span>`:'',v.pb?`<span>PB ${fmtNum(v.pb)} cm</span>`:'',v.lk?`<span>LK ${fmtNum(v.lk)} cm</span>`:''].join('');
+  return `<button class="item" data-a="vopen" data-id="${esc(v.id)}"><div class="ic p-${t[0]}">${t[2]}</div>
+    <div class="t"><b>${esc(v.title||t[1])}</b><small>${lines.join('<br>')}</small>${gr?`<div class="mini">${gr}</div>`:''}</div>
+    <span class="pill p-${t[0]}">${t[1]}</span></button>`;
+}
+function viewVisits(){
+  const today=ymd(),key=v=>String(v.date)+' '+(v.time||'99:99');
+  const up=S.visits.filter(v=>v.date>=today).sort((a,b)=>key(a).localeCompare(key(b)));
+  const past=S.visits.filter(v=>v.date<today).sort((a,b)=>key(b).localeCompare(key(a)));
+  let h='';
+  if(up.length){
+    const n=up[0],d=daysDiff(today,n.date),t=vt(n.type);
+    h+=`<button class="next" data-a="vopen" data-id="${esc(n.id)}"><span class="k">Jadwal berikutnya</span><b>${esc(n.title||t[1])}</b>
+      <span class="m">${esc(fmtDateLong(n.date))}${n.time?' · '+dot(n.time):''}${n.doctor||n.place?'<br>'+esc([n.doctor,n.place].filter(Boolean).join(' · ')):''}</span>
+      <span class="cd">${d===0?'Hari ini':d===1?'Besok':d+' hari lagi'}</span></button>`;
+  }
+  h+=`<div class="sec"><h2>Akan datang</h2><button class="addbtn" data-a="vadd">+ Tambah</button></div>`;
+  const rest=up.slice(1);
+  if(rest.length)h+=`<section class="card">${rest.map(visitItem).join('')}</section>`;
+  else if(!up.length)h+='<p class="hint" style="margin:0 2px 16px">Belum ada jadwal. Tekan + Tambah untuk mencatat jadwal dokter atau imunisasi.</p>';
+  else h+='<p class="hint" style="margin:0 2px 16px">Tidak ada jadwal lain.</p>';
+  h+=`<div class="sec"><h2>Riwayat</h2></div>`;
+  h+=past.length?`<section class="card">${past.map(visitItem).join('')}</section>`:'<p class="hint" style="margin:0 2px">Belum ada riwayat kunjungan. Kunjungan yang tanggalnya sudah lewat otomatis pindah ke sini.</p>';
+  return h;
+}
+function medItem(m){
+  const st=medStatus(m),v=S.visits.find(x=>x.id===m.visitId);
+  const lines=[[m.complaint?'Untuk '+m.complaint:'',m.rule].filter(Boolean).join(' · ')];
+  lines.push(st.active?'Mulai '+fmtDM(m.start)+(v&&v.doctor?' · dari '+v.doctor:''):fmtDM(m.start)+' – '+fmtDM(m.end,true)+' ('+(daysDiff(m.start,m.end)+1)+' hari)');
+  if(m.note)lines.push('📝 '+clip(m.note,80));
+  return `<button class="item" data-a="mopen" data-id="${esc(m.id)}"><div class="ic ${st.active?'p-sakit':''}">💊</div>
+    <div class="t"><b>${esc(m.name)}</b><small>${lines.filter(Boolean).map(esc).join('<br>')}</small></div>
+    <span class="pill ${st.cls}">${esc(st.label)}</span></button>`;
+}
+function viewMeds(){
+  const act=S.meds.filter(m=>medStatus(m).active).sort((a,b)=>String(b.start).localeCompare(String(a.start)));
+  const done=S.meds.filter(m=>!medStatus(m).active).sort((a,b)=>String(b.end).localeCompare(String(a.end)));
+  let h=`<div class="sec"><h2>Sedang dikonsumsi</h2><button class="addbtn" data-a="madd">+ Tambah</button></div>`;
+  h+=act.length?`<section class="card">${act.map(medItem).join('')}</section>`:'<p class="hint" style="margin:0 2px 16px">Tidak ada obat yang sedang dikonsumsi.</p>';
+  h+=`<div class="sec"><h2>Riwayat obat</h2></div>`;
+  h+=done.length?`<section class="card">${done.map(medItem).join('')}</section>`:'<p class="hint" style="margin:0 2px">Belum ada riwayat obat.</p>';
+  h+='<p class="hint" style="text-align:center;margin-top:14px">Suplemen harian tetap dicatat di menu Hari Ini.</p>';
+  return h;
+}
+function viewHealth(){
+  return `<div class="seg">${[['visits','Kunjungan dokter'],['meds','Obat']].map(([k,l])=>`<button class="${S.hsub===k?'on':''}" data-a="hsub" data-v="${k}">${l}</button>`).join('')}</div>`
+    +(S.hsub==='visits'?viewVisits():viewMeds());
+}
+const brand=()=>`<div class="brand">Baby Tracker<small>${esc(CHILD)}</small></div>`;
+function viewLogin(){
+  return `<div class="login">${brand()}
+    <h3>Masuk sebagai</h3>
+    <div class="rolepick">${LOGIN_ROLES.map(k=>`<button class="${S.loginPick===k?'on':''}" data-a="lpick" data-v="${k}">${ROLES[k]}</button>`).join('')}</div>
+    <label class="f">Password<input id="f-pass" type="password" autocomplete="current-password" placeholder="Password" ${S.loginPick?'':'disabled'}></label>
+    <div class="lerr">${esc(S.loginErr)}</div>
+    <button class="btn primary full" data-a="login" ${S.loginPick?'':'disabled'}>Masuk</button>
+  </div>`;
+}
+function banners(){
+  let h='';
+  const m=S.migration;
+  if(!S.migrated&&isAdmin()&&S.tab==='today'&&!S.migrDismissed){
+    if(m){
+      const n=(m.logs||[]).length+(m.visits||[]).length+(m.meds||[]).length;
+      h+=`<div class="migr"><b>Siap dipindahkan:</b> ${n} catatan dari versi Claude (sampai ${esc(String(m.exportedAt||'').slice(0,10))}).<button class="btn primary" data-a="migrate" ${S.migrating?'disabled':''}>${S.migrating?'Memindahkan…':'Pindahkan sekarang'}</button></div>`;
+    }else{
+      h+=`<div class="migr"><b>Pindahkan data dari versi lama?</b><br>Pilih file <b>migrasi.json</b> yang dikirim Claude. Cukup dilakukan sekali.
+        <label class="btn primary" style="cursor:pointer">Pilih file migrasi.json<input type="file" accept=".json,application/json" data-c="migrfile" hidden></label>
+        <button class="linkbtn" data-a="migrskip" style="margin-top:8px">Tidak perlu, sembunyikan</button></div>`;
+    }
+  }
+  if(S.stale)h+='<div class="banner">Belum tersambung ke data, tampilan mungkin belum terbaru.</div>';
+  if(S.err)h+=`<div class="banner">${esc(S.err)}</div>`;
+  return h;
+}
+function timerBar(){
+  const t=S.timer;if(!t)return '';
+  return `<div class="timerbar"><div class="clock tclock">${clock(Date.now()-t.start)}</div>
+    <div class="grow"><b>Tummy time sesi ${t.slot}</b><br>${t.date!==S.date?esc(fmtShort(t.date))+' · ':''}mulai ${dot(timeFromMs(t.start))} · ${esc(roleName(t.byRole))}</div>
+    <button data-a="tcancel" aria-label="Batalkan timer">✕</button><button class="solid" data-a="tstop">Selesai</button></div>`;
+}
+function viewToday(){
+  const c=S.cfg,L=active(),isToday=S.date===ymd();
+  const supp=c.supplements.map((n,i)=>({n,i,log:L.find(l=>l.type==='supp'&&l.key===n)}));
+  const ol=sessionsOf('olahraga').map(i=>({i,log:L.find(l=>l.type==='olahraga'&&l.session===i)}));
+  const tt=sessionsOf('tummy').map(i=>({i,parts:L.filter(l=>l.type==='tummy'&&l.session===i).sort(byCreated)}));
+  const tMin=L.filter(l=>l.type==='tummy').reduce((a,l)=>a+(+l.minutes||0),0);
+  const sDone=supp.filter(s=>s.log).length,oDone=ol.filter(o=>o.log).length;
+  const delCount=S.logs.filter(l=>l.deleted).length;
+  const nd=l=>l&&l.note?'<span class="note-dot">📝</span>':'';
+  let h=`<div class="datenav"><button class="navbtn" data-a="prev" aria-label="Hari sebelumnya">‹</button>
+    <div class="lbl">${esc(fmtDateLong(S.date))}${isToday?'<small>Hari ini</small>':'<small><button data-a="gotoday" style="color:inherit;font-weight:700">Kembali ke hari ini</button></small>'}</div>
+    <button class="navbtn" data-a="next" aria-label="Hari berikutnya" ${isToday?'disabled':''}>›</button></div>`;
+  const mDone=MANDI.filter(([i])=>L.some(l=>l.type==='mandi'&&l.session===i)).length;
+  h+=`<div class="sumA">
+    <div class="${supp.length&&sDone===supp.length?'full':''}"><b>${sDone}/${supp.length}</b><span>Suplemen</span></div>
+    <div class="${oDone>=c.olahragaSessions?'full':''}"><b>${oDone}/${c.olahragaSessions}</b><span>Olahraga</span></div>
+    <div><b>${fmtMin(tMin)}</b><span>Mnt tummy</span></div>
+    <div class="${mDone===MANDI.length?'full':''}"><b>${mDone}/${MANDI.length}</b><span>Mandi</span></div></div>`;
+  if(S.loading)h+='<div class="loading">Memuat catatan…</div>';
+  h+=`<section class="card"><div class="card-h"><h2>Suplemen</h2><button class="addbtn" data-a="suppman">Edit</button></div>
+    ${supp.length?`<div class="supp-grid">${supp.map(s=>`<button class="supp${s.log?' done':''}" data-a="supp" data-i="${s.i}">
+      <span class="ic">${s.log?'✓':''}</span><span><b>${esc(s.n)}</b><small>${s.log?dot(s.log.time)+' · '+esc(roleName(s.log.createdRole)):'Belum'}</small></span></button>`).join('')}</div>`
+      :'<p class="empty">Belum ada suplemen. Tekan Edit untuk menambah.</p>'}
+    <p class="hint">Tap untuk centang, tap lagi untuk membatalkan.</p></section>`;
+  h+=`<section class="card"><div class="card-h"><h2>Olahraga</h2><span class="meta">${oDone} dari ${c.olahragaSessions} sesi</span></div>
+    <div class="dots">${ol.map(o=>`<button class="dot${o.log?' done':''}" data-a="ol" data-i="${o.i}" aria-label="Olahraga sesi ${o.i}">${o.i}${o.log?`<small>${dot(o.log.time)}</small><small class="who">${esc(roleName(o.log.createdRole))}</small>${o.log.note?'<span class="nb">📝</span>':''}`:''}</button>`).join('')}</div>
+    <p class="hint">Tap untuk mencatat. Tap lagi untuk menambah catatan.</p></section>`;
+  h+=`<section class="card"><div class="card-h"><h2>Tummy time</h2><span class="meta">Total ${fmtMin(tMin)} menit</span></div>
+    <div class="trows">${tt.map(r=>{
+      const live=S.timer&&S.timer.slot===r.i&&S.timer.date===S.date;
+      const sum=r.parts.reduce((a,l)=>a+(+l.minutes||0),0);
+      return `<div class="trow${r.parts.length?' has':''}"><div class="tnum">${r.i}</div>
+        <div class="tparts">${r.parts.map(p=>`<button class="chip" data-a="detail" data-id="${esc(p.id)}">${fmtMin(p.minutes)} mnt${nd(p)}<small>${dot(p.time)} · ${esc(roleName(p.createdRole))}</small></button>`).join('')}
+          ${live?'<span class="chip live">● <span class="tclock">'+clock(Date.now()-S.timer.start)+'</span></span>':''}
+          ${!r.parts.length&&!live?'<span class="empty">Belum</span>':''}
+          ${r.parts.length>1?`<span class="tsum">= ${fmtMin(sum)} mnt</span>`:''}</div>
+        <div class="tact">${live?'<button class="ibtn" data-a="tstop" aria-label="Selesai" style="background:var(--warm);color:#fff;border-color:var(--warm)">■</button>'
+          :`<button class="ibtn" data-a="tstart" data-i="${r.i}" aria-label="Mulai timer sesi ${r.i}" ${S.timer?'disabled':''}>▶</button>`}
+          <button class="ibtn" data-a="tadd" data-i="${r.i}" aria-label="Isi menit manual sesi ${r.i}">+</button></div></div>`;
+    }).join('')}</div>
+    <p class="hint">▶ pakai timer · + isi menit manual · tap angka menit untuk ubah atau beri catatan</p></section>`;
+  const md=MANDI.map(([i,n])=>({i,n,log:L.find(l=>l.type==='mandi'&&l.session===i)}));
+  h+=`<section class="card"><div class="card-h"><h2>Mandi</h2><span class="meta">${md.filter(m=>m.log).length} dari ${md.length} sesi</span></div>
+    <div class="supp-grid">${md.map(m=>`<button class="supp${m.log?' done':''}" data-a="mandi" data-i="${m.i}">
+      <span class="ic">${m.log?'✓':''}</span><span><b>${m.n}</b>${nd(m.log)}<small>${m.log?dot(m.log.time)+' · '+esc(roleName(m.log.createdRole)):'Belum'}</small></span></button>`).join('')}</div>
+    <p class="hint">Tap untuk mencatat. Tap lagi untuk menambah catatan.</p></section>`;
+  if(isAdmin()&&delCount)h+=`<button class="linkbtn" data-a="deleted">Catatan terhapus (${delCount})</button>`;
+  return h;
+}
+function dayStats(logs){
+  const c=S.cfg,L=(logs||[]).filter(l=>!l.deleted);
+  return {missing:logs===null,supp:c.supplements.map(n=>L.some(l=>l.type==='supp'&&l.key===n)),
+    ol:new Set(L.filter(l=>l.type==='olahraga').map(l=>l.session)).size,
+    tm:L.filter(l=>l.type==='tummy').reduce((a,l)=>a+(+l.minutes||0),0),
+    md:MANDI.map(([i])=>L.some(l=>l.type==='mandi'&&l.session===i))};
+}
+function viewRecap(){
+  const c=S.cfg;
+  let h=`<div class="seg">${[7,14,30].map(n=>`<button class="${S.recapRange===n?'on':''}" data-a="range" data-v="${n}">${n} hari</button>`).join('')}</div>`;
+  if(!S.recap||S.recap.loading)return h+'<div class="loading">Memuat rekap…</div>';
+  const rows=S.recap.days.map(([d,logs])=>({d,s:dayStats(logs)}));
+  const n=rows.length;
+  const avg=rows.reduce((a,r)=>a+r.s.tm,0)/n;
+  const olFull=rows.filter(r=>r.s.ol>=c.olahragaSessions).length;
+  const spFull=rows.filter(r=>r.s.supp.length&&r.s.supp.every(Boolean)).length;
+  const mdFull=rows.filter(r=>r.s.md.every(Boolean)).length;
+  h+=`<div class="sumA">
+    <div class="${spFull===n?'full':''}"><b>${spFull}/${n}</b><span>Suplemen</span></div>
+    <div class="${olFull===n?'full':''}"><b>${olFull}/${n}</b><span>Olahraga</span></div>
+    <div><b>${fmtMin(Math.round(avg*10)/10)}</b><span>Mnt tummy</span></div>
+    <div class="${mdFull===n?'full':''}"><b>${mdFull}/${n}</b><span>Mandi</span></div></div>
+    <p class="hint" style="margin:-4px 0 12px;text-align:center">Jumlah hari lengkap dari ${n} hari terakhir · tummy = rata-rata menit per hari</p>`;
+  if(c.supplements.length)h+=`<section class="card"><div class="card-h"><h2>Suplemen</h2><span class="meta">${n} hari terakhir</span></div>
+    ${c.supplements.map((s,i)=>{const k=rows.filter(r=>r.s.supp[i]).length;return `<div class="step"><span>${esc(s)}</span><b class="${k===n?'ok':''}">${k}/${n} hari</b></div>`;}).join('')}</section>`;
+  h+=`<section class="card"><div class="card-h"><h2>Mandi</h2><span class="meta">${n} hari terakhir</span></div>
+    ${MANDI.map(([i,nm],j)=>{const k=rows.filter(r=>r.s.md[j]).length;return `<div class="step"><span>${nm}</span><b class="${k===n?'ok':''}">${k}/${n} hari</b></div>`;}).join('')}</section>`;
+  const chron=rows.slice().reverse();
+  const mx=Math.max(...chron.map(r=>r.s.tm),1);
+  const lbl=(d,i)=>n===7?fmtShort(d).split(',')[0]:(n===14||i%5===0||i===chron.length-1)?String(+d.slice(8)):'';
+  h+=`<section class="card"><div class="card-h"><h2>Tummy time per hari</h2><span class="meta">menit</span></div>
+    <div class="chart">${chron.map(r=>`<div class="bar${r.s.tm?'':' zero'}" style="height:${Math.max(2,r.s.tm/mx*100)}%" title="${esc(fmtShort(r.d))}: ${fmtMin(r.s.tm)} menit"></div>`).join('')}</div>
+    <div class="xl">${chron.map((r,i)=>`<span>${esc(lbl(r.d,i))}</span>`).join('')}</div></section>`;
+  h+=`<section class="card"><div class="card-h"><h2>Per hari</h2><span class="meta">tap untuk buka</span></div>
+    <table class="rk"><thead><tr><th>Tanggal</th><th>Suplemen</th><th>Olahraga</th><th>Tummy</th><th>Mandi</th></tr></thead><tbody>
+    ${rows.map(r=>`<tr data-a="jump" data-d="${r.d}"><td>${esc(fmtShort(r.d))}</td>
+      <td>${r.s.missing?'<span class="no">?</span>':r.s.supp.map(x=>x?'<span class="ok">✓</span>':'<span class="no">·</span>').join(' ')}</td>
+      <td class="${r.s.ol>=c.olahragaSessions?'ok':''}">${r.s.ol}/${c.olahragaSessions}</td>
+      <td>${fmtMin(r.s.tm)} mnt</td>
+      <td class="${r.s.md.every(Boolean)?'ok':''}">${r.s.md.filter(Boolean).length}/${MANDI.length}</td></tr>`).join('')}
+    </tbody></table></section>`;
+  return h;
+}
+function tabs(){
+  const t=(k,l)=>`<button class="tab${S.tab===k?' on':''}" data-a="tab" data-v="${k}">${ICON[k]}${l}</button>`;
+  return `<nav class="tabs"><div class="in">${t('today','Hari Ini')}${t('recap','Rekap')}${t('health','Kesehatan')}</div></nav>`;
+}
+function render(){
+  const app=$('#app'),ae=document.activeElement;
+  if(ae&&app.contains(ae)&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName)){S.pendingRender=true;return;}
+  if(!S.authReady){app.innerHTML='<div class="splash">Memuat…</div>';return;}
+  if(!S.role){app.innerHTML=viewLogin();return;}
+  app.innerHTML=`<div class="top">${brand()}<button class="role" data-a="account">${esc(roleName(S.role))} ▾</button></div>`
+    +banners()+timerBar()+(S.tab==='today'?viewToday():S.tab==='recap'?viewRecap():viewHealth())+tabs();
+}
+
+/* ---------- events ---------- */
+function loginMsg(c){
+  if(c==='auth/invalid-credential'||c==='auth/wrong-password'||c==='auth/user-not-found'||c==='auth/invalid-login-credentials')return 'Password salah, coba lagi.';
+  if(c==='auth/too-many-requests')return 'Terlalu banyak percobaan. Tunggu beberapa menit.';
+  if(c==='auth/network-request-failed')return 'Tidak ada koneksi internet.';
+  if(c==='auth/operation-not-allowed')return 'Login email/password belum diaktifkan di Firebase.';
+  if(c==='auth/user-disabled')return 'Akun ini dinonaktifkan.';
+  return 'Gagal masuk ('+(c||'error')+').';
+}
+async function doLogin(){
+  const inp=$('#f-pass');if(!S.loginPick||!inp||!fbAuth)return;
+  const pw=inp.value;
+  if(!pw){S.loginErr='Isi password dulu.';inp.blur();render();return;}
+  inp.blur();S.loginErr='Masuk…';render();
+  try{await FB.signInWithEmailAndPassword(fbAuth,S.loginPick+'@'+EMAIL_DOMAIN,pw);S.loginErr='';}
+  catch(e){S.loginErr=loginMsg(e&&e.code);render();}
+}
+async function runMigration(){
+  const m=S.migration;if(!m||S.migrating||!isAdmin())return;
+  S.migrating=true;render();
+  let fail=0;
+  const put=async(p,d)=>{try{await S.db.doc(p).set(d);}catch(e){fail++;}};
+  if(m.config)await put('config/main',m.config);
+  for(const l of m.logs||[]){const {id,...d}=l;await put('days/'+d.date+'/logs/'+id,d);}
+  for(const v of m.visits||[]){const {id,...d}=v;await put('visits/'+id,d);}
+  for(const x of m.meds||[]){const {id,...d}=x;await put('meds/'+id,d);}
+  if(!fail)await put('meta/migration',{at:Date.now(),byRole:S.role,exportedAt:m.exportedAt||''});
+  S.migrating=false;
+  toast(fail?fail+' data gagal dipindah, coba lagi.':'Data lama berhasil dipindahkan');
+  render();
+}
+const A={
+  migrate:()=>runMigration(),
+  migrskip:()=>{S.migrDismissed=true;render();},
+  lpick:b=>{S.loginPick=b.dataset.v;S.loginErr='';render();setTimeout(()=>{const i=$('#f-pass');if(i)i.focus();},30);},
+  login:()=>doLogin(),
+  account:()=>openAccount(),
+  tab:b=>{S.tab=b.dataset.v;if(S.tab==='recap')loadRecap();render();window.scrollTo(0,0);},
+  prev:()=>{S.date=addDays(S.date,-1);subscribeDay();},
+  next:()=>{if(S.date<ymd()){S.date=addDays(S.date,1);subscribeDay();}},
+  gotoday:()=>{S.date=ymd();subscribeDay();},
+  supp:b=>{
+    const n=S.cfg.supplements[+b.dataset.i];if(n==null)return;
+    const l=active().find(x=>x.type==='supp'&&x.key===n);
+    if(l)return uncheckSupp(l);
+    quickLog({type:'supp',key:n},n);
+  },
+  ol:b=>{
+    const i=+b.dataset.i,l=active().find(x=>x.type==='olahraga'&&x.session===i);
+    if(l)return openDetail(l.id);
+    quickLog({type:'olahraga',session:i},'Olahraga '+i);
+  },
+  mandi:b=>{
+    const i=+b.dataset.i,l=active().find(x=>x.type==='mandi'&&x.session===i);
+    if(l)return openDetail(l.id);
+    quickLog({type:'mandi',session:i},'Mandi '+mandiName(i).toLowerCase());
+  },
+  suppman:()=>openSuppManage(),
+  hsub:b=>{S.hsub=b.dataset.v;render();},
+  vadd:()=>openVisitForm(null),
+  vopen:b=>{const v=S.visits.find(x=>x.id===b.dataset.id);if(v)openVisitForm(v);},
+  madd:()=>openMedForm(null),
+  mopen:b=>{const m=S.meds.find(x=>x.id===b.dataset.id);if(m)openMedDetail(m);},
+  tstart:b=>startTimer(+b.dataset.i),
+  tstop:()=>stopTimer(),
+  tcancel:()=>cancelTimer(),
+  tadd:b=>openTummyAdd(+b.dataset.i),
+  detail:b=>openDetail(b.dataset.id),
+  deleted:()=>openDeleted(),
+  range:b=>{S.recapRange=+b.dataset.v;loadRecap();},
+  jump:b=>{S.date=b.dataset.d;S.tab='today';subscribeDay();window.scrollTo(0,0);}
+};
+$('#app').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b||b.disabled)return;const f=A[b.dataset.a];if(f)f(b);});
+$('#app').addEventListener('change',e=>{
+  if(e.target.dataset.c!=='migrfile'||!e.target.files||!e.target.files[0])return;
+  e.target.files[0].text().then(t=>{
+    const j=JSON.parse(t);
+    if(!j||!Array.isArray(j.logs))throw new Error('format');
+    S.migration=j;render();
+  }).catch(()=>toast('File tidak dikenali. Pastikan memilih migrasi.json.'));
+});
+$('#app').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='f-pass'){e.preventDefault();doLogin();}});
+document.addEventListener('focusout',()=>{setTimeout(()=>{if(S.pendingRender&&$('#sb').hidden){S.pendingRender=false;render();}},60);});
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden)return;
+  const t=ymd();
+  if(S.lastToday&&S.lastToday!==t&&S.date===S.lastToday){S.date=t;subscribeDay();}
+  S.lastToday=t;
+});
+function tick(){if(!S.timer)return;const t=clock(Date.now()-S.timer.start);document.querySelectorAll('.tclock').forEach(el=>{el.textContent=t;});}
+
+/* ---------- init ---------- */
+async function init(){
+  S.date=ymd();S.lastToday=S.date;
+  render();setInterval(tick,1000);
+  try{
+    const app=FB.initializeApp(FIREBASE_CONFIG);
+    fbAuth=FB.getAuth(app);
+    let fs;
+    try{fs=FB.initializeFirestore(app,{localCache:FB.persistentLocalCache({tabManager:FB.persistentMultipleTabManager()})});}
+    catch(e){fs=FB.initializeFirestore(app,{});}
+    S.db=mkDB(fs);
+  }catch(e){S.authReady=true;S.err='Gagal memuat Firebase. Periksa koneksi lalu buka ulang.';render();return;}
+  FB.onAuthStateChanged(fbAuth,u=>{
+    if(u){
+      const r=String(u.email||'').split('@')[0].toLowerCase();
+      if(!LOGIN_ROLES.includes(r)){S.authReady=true;S.loginErr='Akun ini tidak dikenal.';FB.signOut(fbAuth);return;}
+      S.role=r;S.uid=u.uid;S.authReady=true;S.loginErr='';
+      if(!S.subscribed){S.subscribed=true;subscribeShared();subscribeDay();}
+      render();
+    }else{
+      if(S.subscribed){location.reload();return;}
+      S.role=null;S.authReady=true;render();
+    }
+  });
+  if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+init();
+</script>
+</body>
+</html>
